@@ -40,3 +40,14 @@ for cerpen in cerpens:
             data = np.append(data, katastop.split(' '))
         datas.append(data)
     kelasdata.append(datas)
+
+#pembobotan
+terms = np.array([])
+for i in range(len(kelasdata)):
+    for j in range(len(kelasdata[i])):
+        for k in range(kelasdata[i][j].size):
+            if terms.size == 0:
+                terms = np.append(terms, kelasdata[i][j][k])
+            else:
+                if np.argwhere(terms == kelasdata[i][j][k]).size == 0:
+                    terms = np.append(terms, kelasdata[i][j][k])
