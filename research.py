@@ -7,6 +7,7 @@ Created on Fri Apr 12 01:09:02 2019
 
 import os
 import numpy as np
+import math
 from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
 from Sastrawi.StopWordRemover.StopWordRemoverFactory import StopWordRemoverFactory
 factory = StopWordRemoverFactory()
@@ -23,9 +24,8 @@ cerpens = []
 for p in path:
     cerpens.append([os.path.join(p,fname) for fname in os.listdir(p) if fname.endswith('.txt')])
 
-kelasdata = []
+datas = []
 for cerpen in cerpens:
-    datas = []
     for cer in cerpen:
         contents = open(cer, 'r')
         kalimat = []
@@ -39,15 +39,31 @@ for cerpen in cerpens:
             katastop = stopword.remove(katadasar)
             data = np.append(data, katastop.split(' '))
         datas.append(data)
-    kelasdata.append(datas)
 
 #pembobotan
 terms = np.array([])
-for i in range(len(kelasdata)):
-    for j in range(len(kelasdata[i])):
-        for k in range(kelasdata[i][j].size):
-            if terms.size == 0:
-                terms = np.append(terms, kelasdata[i][j][k])
-            else:
-                if np.argwhere(terms == kelasdata[i][j][k]).size == 0:
-                    terms = np.append(terms, kelasdata[i][j][k])
+for i in range(len(datas)):
+    for j in range(datas[i].size):
+        if terms.size == 0:
+            terms = np.append(terms, datas[i][j])
+        else:
+            if np.argwhere(terms == datas[i][j]).size == 0:
+                terms = np.append(terms, datas[i][j])
+
+tf = np.zeros((terms.size, 500))
+for i in range(len(datas)):
+    for j in range(len(datas[i])):
+        for k in range(tf.shape[0]):
+            if terms[k] == datas[i][j]:
+                tf[k][i] += 1
+
+IDF = np.array([])
+for i in range(terms.size):
+    D = len(datas)
+    df = len(np.nonzero(tf[i,:])[0])
+    IDF = np.append(IDF, math.log(D/df))
+
+W = np.zeros((len(datas), terms.size))
+for i in range(W.shape[0]):
+    for j in range(W.shape[1]):
+        W[i,j] = tf[j,i] * (IDF[j] + 1)
