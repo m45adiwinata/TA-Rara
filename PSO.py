@@ -8,6 +8,7 @@ Created on Fri May 24 23:41:22 2019
 import pandas as pd
 import numpy as np
 import random
+import math
 
 tf = np.array(pd.read_excel('term frequency.xlsx'))
 #terms = np.array(pd.read_excel('terms.xlsx'))
@@ -45,6 +46,43 @@ def naive_bayes(all_tf, tf_uji, term_used):
     P[2] *= pr_TD
     return P
 
+def hitung_fitness(alpha, beta, total_tf_a, total_tf_f, total_tf_td, populasi):
+    fitness = []
+    for i in range(populasi.shape[0]):
+        all_tf = [total_tf_a[i], total_tf_f[i], total_tf_td[i]]
+        result = []
+        for j in range(125):
+            P = naive_bayes(all_tf, tf[:,j], term_used[i])
+            result.append(np.argmax(P))
+        for j in range(175, 300):
+            P = naive_bayes(all_tf, tf[:,j], term_used[i])
+            result.append(np.argmax(P))
+        for j in range(350, 450):
+            P = naive_bayes(all_tf, tf[:,j], term_used[i])
+            result.append(np.argmax(P))
+        result = np.array(result)
+        if np.argwhere(result == 0).size > 0:
+            precisions = [np.argwhere(result[:150] == 0).size/float(np.argwhere(result == 0).size)]
+        else:
+            precisions = [0]
+        if np.argwhere(result == 1).size > 0:
+            precisions.append(np.argwhere(result[150:300] == 1).size/float(np.argwhere(result == 1).size))
+        else:
+            precisions.append(0)
+        if np.argwhere(result == 2).size > 0:
+            precisions.append(np.argwhere(result[300:] == 2).size/float(np.argwhere(result == 2).size))
+        else:
+            precisions.append(0)
+        recalls = [np.argwhere(result[:150] == 0).size/float(150)]
+        recalls.append(np.argwhere(result[150:300] == 1).size/float(150))
+        recalls.append(np.argwhere(result[300:] == 2).size/float(100))
+        Fmeasures = []
+        for j in range(3):
+            Fmeasures.append(2 * recalls[i] * precisions[i] / (recalls[i] + precisions[i]))
+        fit = alpha * np.mean(Fmeasures) + beta * (len(terms) - len(term_used[i])) / float(len(terms))
+        fitness.append(fit)
+    return fitness
+
 b_inersia = 0.6
 c1 = 0.5
 c2 = 0.5
@@ -75,39 +113,26 @@ for i in range(populasi.shape[0]):
 #HITUNG FITNESS
 alpha = 0.85
 beta = 0.15
-
-fitness = []
-for i in range(populasi.shape[0]):
-    all_tf = [total_tf_a[i], total_tf_f[i], total_tf_td[i]]
-    result = []
-    for j in range(125):
-        P = naive_bayes(all_tf, tf[:,j], term_used[i])
-        result.append(np.argmax(P))
-    for j in range(175, 300):
-        P = naive_bayes(all_tf, tf[:,j], term_used[i])
-        result.append(np.argmax(P))
-    for j in range(350, 450):
-        P = naive_bayes(all_tf, tf[:,j], term_used[i])
-        result.append(np.argmax(P))
-    result = np.array(result)
-    if np.argwhere(result == 0).size > 0:
-        precisions = [np.argwhere(result[:150] == 0).size/float(np.argwhere(result == 0).size)]
+v = np.ones((populasi.shape))
+for i in range(100):
+    fitness = hitung_fitness(alpha, beta, total_tf_a, total_tf_f, total_tf_td, populasi)
+    if i == 0:
+        pbest_val = fitness
+        pbest_iter_idx = np.zeros(populasi.shape[0])
     else:
-        precisions = [0]
-    if np.argwhere(result == 1).size > 0:
-        precisions.append(np.argwhere(result[150:300] == 1).size/float(np.argwhere(result == 1).size))
-    else:
-        precisions.append(0)
-    if np.argwhere(result == 2).size > 0:
-        precisions.append(np.argwhere(result[300:] == 2).size/float(np.argwhere(result == 2).size))
-    else:
-        precisions.append(0)
-    recalls = [np.argwhere(result[:150] == 0).size/float(150)]
-    recalls.append(np.argwhere(result[150:300] == 1).size/float(150))
-    recalls.append(np.argwhere(result[300:] == 2).size/float(100))
-    Fmeasures = []
-    for j in range(3):
-        Fmeasures.append(2 * recalls[i] * precisions[i] / (recalls[i] + precisions[i]))
-    fit = alpha * np.mean(Fmeasures) + beta * (len(terms) - len(term_used[i])) / float(len(terms))
-    fitness.append(fit)
+        new_pbest = fitness
+        for j in range(len(pbest_val)):
+            if new_pbest[j] > pbest_val[j]:
+                pbest_val[j] = new_pbest[j]
+                pbest_iter_idx[j] = i
+    gbest_idx = np.argmax(fitness)
+    gbest_val = fitness[np.argmax(fitness)]
+    for j in range(v.shape[0]):
+        for k in range(v.shape[1]):
+            v[j,k] = b_inersia * v + c1 * random.randint(0,1) * (pbest_val[j] - populasi[j,k]) + c2 * random.randint(0,1) * (gbest_val - populasi[j,k])
+            sig_v = 1 / (1 + pow(math.e, (-v[j,k])))
+            if populasi[j,k] < sig_v:
+                populasi[j,k] = 1
+            else:
+                populasi[j,k] = 0
     break
