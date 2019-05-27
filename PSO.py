@@ -78,7 +78,7 @@ def hitung_fitness(alpha, beta, total_tf_a, total_tf_f, total_tf_td, populasi):
         recalls.append(np.argwhere(result[300:] == 2).size/float(100))
         Fmeasures = []
         for j in range(3):
-            Fmeasures.append(2 * recalls[i] * precisions[i] / (recalls[i] + precisions[i]))
+            Fmeasures.append(2 * recalls[j] * precisions[j] / (recalls[j] + precisions[j]))
         fit = alpha * np.mean(Fmeasures) + beta * (len(terms) - len(term_used[i])) / float(len(terms))
         fitness.append(fit)
     return fitness
@@ -114,7 +114,7 @@ for i in range(populasi.shape[0]):
 alpha = 0.85
 beta = 0.15
 v = np.ones((populasi.shape))
-for i in range(100):
+for i in range(2):
     fitness = hitung_fitness(alpha, beta, total_tf_a, total_tf_f, total_tf_td, populasi)
     if i == 0:
         pbest_val = fitness
@@ -135,4 +135,4 @@ for i in range(100):
                 populasi[j,k] = 1
             else:
                 populasi[j,k] = 0
-    break
+    
