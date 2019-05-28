@@ -10,7 +10,7 @@ import numpy as np
 import random
 import math
 
-tf = np.array(pd.read_excel('term frequency.xlsx'))
+tf = np.reshape(np.array(pd.read_excel('term frequency.xlsx')), (350, -1))
 #terms = np.array(pd.read_excel('terms.xlsx'))
 file = open('terms.txt', 'r')
 for t in file:

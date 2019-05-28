@@ -11,6 +11,7 @@ import math
 from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
 from Sastrawi.StopWordRemover.StopWordRemoverFactory import StopWordRemoverFactory
 import pandas as pd
+import nltk
 
 factory = StopWordRemoverFactory()
 stopword = factory.create_stop_word_remover()
@@ -37,6 +38,7 @@ for cerpen in cerpens:
         data = np.array([])
         for k in kalimat:
             katastop = stopword.remove(k)
+            katastop = (' ').join(nltk.tokenize.word_tokenize(katastop))
             katadasar = stemmer.stem(katastop)
             katastop = stopword.remove(katadasar)
             data = np.append(data, katastop.split(' '))
