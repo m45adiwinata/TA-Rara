@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: uW-8 -*-
 """
 Created on Fri May 24 23:41:22 2019
 
@@ -10,7 +10,7 @@ import numpy as np
 import random
 import math
 
-tf = np.reshape(np.array(pd.read_excel('term frequency.xlsx')), (350, -1))
+W = np.reshape(np.array(pd.read_excel('bobot awal.xlsx')), (350, -1))
 #terms = np.array(pd.read_excel('terms.xlsx'))
 file = open('terms.txt', 'r')
 for t in file:
@@ -21,24 +21,24 @@ file.close()
 bobot_awal = np.array(pd.read_excel('bobot awal.xlsx'))
 IDF = np.array(pd.read_excel('IDF.xlsx'))
 
-def naive_bayes(all_tf, tf_uji, term_used):
+def naive_bayes(all_W, W_uji, term_used):
     pr_A = 175/float(500)
     pr_F = 175/float(500)
     pr_TD = 150/float(500)
     p_term = []
-    all_tf = np.array(all_tf)
-    total_t = sum(all_tf[0,:]) + sum(all_tf[1,:]) + sum(all_tf[2,:])
-    for i in range(len(all_tf)):
+    all_W = np.array(all_W)
+    total_t = sum(all_W[0,:]) + sum(all_W[1,:]) + sum(all_W[2,:])
+    for i in range(len(all_W)):
         temp = []
-        for j in range(len(all_tf[i])):
-            P = (all_tf[i,j] + 1) / float(total_t + sum(all_tf[i,:]))
+        for j in range(len(all_W[i])):
+            P = (all_W[i,j] + 1) / float(total_t + sum(all_W[i,:]))
             temp.append(P)
         p_term.append(temp)
     P = []
     for i in range(len(p_term)):
         temp = 1
         for j in range(len(p_term)):
-            if tf_uji[term_used[j]] > 0:
+            if W_uji[term_used[j]] > 0:
                 temp *= p_term[i][j]
         P.append(temp)
     P[0] *= pr_A
@@ -46,19 +46,19 @@ def naive_bayes(all_tf, tf_uji, term_used):
     P[2] *= pr_TD
     return P
 
-def hitung_fitness(alpha, beta, total_tf_a, total_tf_f, total_tf_td, populasi):
+def hitung_fitness(alpha, beta, total_W_a, total_W_f, total_W_td, populasi):
     fitness = []
     for i in range(populasi.shape[0]):
-        all_tf = [total_tf_a[i], total_tf_f[i], total_tf_td[i]]
+        all_W = [total_W_a[i], total_W_f[i], total_W_td[i]]
         result = []
         for j in range(125):
-            P = naive_bayes(all_tf, tf[:,j], term_used[i])
+            P = naive_bayes(all_W, W[:,j], term_used[i])
             result.append(np.argmax(P))
         for j in range(175, 300):
-            P = naive_bayes(all_tf, tf[:,j], term_used[i])
+            P = naive_bayes(all_W, W[:,j], term_used[i])
             result.append(np.argmax(P))
         for j in range(350, 450):
-            P = naive_bayes(all_tf, tf[:,j], term_used[i])
+            P = naive_bayes(all_W, W[:,j], term_used[i])
             result.append(np.argmax(P))
         result = np.array(result)
         if np.argwhere(result == 0).size > 0:
@@ -92,9 +92,9 @@ for i in range(populasi.shape[0]):
     for j in range(populasi.shape[1]):
         populasi[i,j] = random.randint(0,1)
 term_used = []
-total_tf_a = []
-total_tf_f = []
-total_tf_td = []
+total_W_a = []
+total_W_f = []
+total_W_td = []
 for i in range(populasi.shape[0]):
     temp = []
     tmp_a = []
@@ -103,19 +103,19 @@ for i in range(populasi.shape[0]):
     for j in range(populasi.shape[1]):
         if populasi[i,j] == 1:
             temp.append(j)
-            tmp_a.append(sum(tf[j,:175]))
-            tmp_f.append(sum(tf[j,175:350]))
-            tmp_td.append(sum(tf[j,350:]))
+            tmp_a.append(sum(W[j,:175]))
+            tmp_f.append(sum(W[j,175:350]))
+            tmp_td.append(sum(W[j,350:]))
     term_used.append(temp)
-    total_tf_a.append(tmp_a)
-    total_tf_f.append(tmp_f)
-    total_tf_td.append(tmp_td)
+    total_W_a.append(tmp_a)
+    total_W_f.append(tmp_f)
+    total_W_td.append(tmp_td)
 #HITUNG FITNESS
 alpha = 0.85
 beta = 0.15
 v = np.ones((populasi.shape))
 for i in range(2):
-    fitness = hitung_fitness(alpha, beta, total_tf_a, total_tf_f, total_tf_td, populasi)
+    fitness = hitung_fitness(alpha, beta, total_W_a, total_W_f, total_W_td, populasi)
     if i == 0:
         pbest_val = fitness
         pbest_iter_idx = np.zeros(populasi.shape[0])
