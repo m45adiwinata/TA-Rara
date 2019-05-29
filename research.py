@@ -12,6 +12,7 @@ from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
 from Sastrawi.StopWordRemover.StopWordRemoverFactory import StopWordRemoverFactory
 import pandas as pd
 import nltk
+nltk.download()
 
 factory = StopWordRemoverFactory()
 stopword = factory.create_stop_word_remover()
