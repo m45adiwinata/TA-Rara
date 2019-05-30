@@ -11,8 +11,6 @@ import math
 from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
 from Sastrawi.StopWordRemover.StopWordRemoverFactory import StopWordRemoverFactory
 import pandas as pd
-import nltk
-nltk.download()
 
 factory = StopWordRemoverFactory()
 stopword = factory.create_stop_word_remover()
@@ -28,6 +26,18 @@ cerpens = []
 for p in path:
     cerpens.append([os.path.join(p,fname) for fname in os.listdir(p) if fname.endswith('.txt')])
 
+def tokenize(kalimat):
+    words = kalimat.split(' ')
+    token = []
+    for word in words:
+        lw = list(word)
+        term = []
+        for w in lw:
+            if w.isalpha() == True:
+                term.append(w)
+        token.append(('').join(term))
+    return (' ').join(token)
+    
 datas = []
 for cerpen in cerpens:
     for cer in cerpen:
@@ -39,7 +49,7 @@ for cerpen in cerpens:
         data = np.array([])
         for k in kalimat:
             katastop = stopword.remove(k)
-            katastop = (' ').join(nltk.tokenize.word_tokenize(katastop))
+            katastop = tokenize(katastop)
             katadasar = stemmer.stem(katastop)
             katastop = stopword.remove(katadasar)
             data = np.append(data, katastop.split(' '))
@@ -55,7 +65,7 @@ for i in range(len(datas)):
             if np.argwhere(terms == datas[i][j]).size == 0:
                 terms = np.append(terms, datas[i][j])
 
-tf = np.zeros((terms.size, 500))
+tf = np.zeros((terms.size, 350))
 for i in range(len(datas)):
     for j in range(len(datas[i])):
         for k in range(tf.shape[0]):

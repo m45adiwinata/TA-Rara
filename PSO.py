@@ -10,7 +10,7 @@ import numpy as np
 import random
 import math
 
-W = np.reshape(np.array(pd.read_excel('bobot awal.xlsx')), (350, -1))
+W = np.array(pd.read_excel('bobot awal.xlsx')).T
 #terms = np.array(pd.read_excel('terms.xlsx'))
 file = open('terms.txt', 'r')
 for t in file:
@@ -49,6 +49,7 @@ def hitung_fitness(alpha, beta, total_W_a, total_W_f, total_W_td, populasi):
     for i in range(populasi.shape[0]):
         all_W = [total_W_a[i], total_W_f[i], total_W_td[i]]
         result = []
+        print("naive bayes clasification step")
         for j in range(125):
             P = naive_bayes(all_W, W[:,j], term_used[i])
             result.append(np.argmax(P))
@@ -59,6 +60,7 @@ def hitung_fitness(alpha, beta, total_W_a, total_W_f, total_W_td, populasi):
             P = naive_bayes(all_W, W[:,j], term_used[i])
             result.append(np.argmax(P))
         result = np.array(result)
+        print("calculate precisions")
         if np.argwhere(result == 0).size > 0:
             precisions = [np.argwhere(result[:125] == 0).size/float(np.argwhere(result == 0).size)]
         else:
@@ -71,9 +73,11 @@ def hitung_fitness(alpha, beta, total_W_a, total_W_f, total_W_td, populasi):
             precisions.append(np.argwhere(result[250:] == 2).size/float(np.argwhere(result == 2).size))
         else:
             precisions.append(0)
+        print("calculate recalls")
         recalls = [np.argwhere(result[:125] == 0).size/float(125)]
         recalls.append(np.argwhere(result[125:250] == 1).size/float(125))
         recalls.append(np.argwhere(result[250:] == 2).size/float(100))
+        print("determining fmeasures")
         Fmeasures = []
         for j in range(3):
             Fmeasures.append(2 * recalls[j] * precisions[j] / (recalls[j] + precisions[j]))
@@ -85,10 +89,12 @@ b_inersia = 0.6
 c1 = 0.5
 c2 = 0.5
 #INISIASI POPULASI
-populasi = np.zeros((30,len(terms)))
+print("initiating population")
+populasi = np.zeros((3,len(terms)))
 for i in range(populasi.shape[0]):
     for j in range(populasi.shape[1]):
         populasi[i,j] = random.randint(0,1)
+print("find and sum used features")
 term_used = []
 total_W_a = []
 total_W_f = []
@@ -109,10 +115,12 @@ for i in range(populasi.shape[0]):
     total_W_f.append(tmp_f)
     total_W_td.append(tmp_td)
 #HITUNG FITNESS
+print("evaluate fitness and generating")
 alpha = 0.85
 beta = 0.15
 v = np.zeros((populasi.shape))
 for i in range(2):
+    print("generation", (i+1))
     fitness = hitung_fitness(alpha, beta, total_W_a, total_W_f, total_W_td, populasi)
     if i == 0:
         pbest_val = fitness
