@@ -83,7 +83,7 @@ for i in range(W.shape[0]):
     for j in range(W.shape[1]):
         W[i,j] = tf[j,i] * (IDF[j] + 1)
 df = pd.DataFrame(W)
-df.to_excel('bobot awal.xlsx', index=False, header=False)
+df.to_excel('bobot awal.xlsx', index=False)
 tf = pd.DataFrame(tf)
 tf.to_excel('term frequency.xlsx', index=False, header=False)
 file = open('terms.txt', 'w')

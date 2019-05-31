@@ -56,7 +56,7 @@ def hitung_fitness(alpha, beta, total_W_a, total_W_f, total_W_td, populasi):
         for j in range(125, 250):
             P = naive_bayes(all_W, W[:,j], term_used[i])
             result.append(np.argmax(P))
-        for j in range(250, 350):
+        for j in range(250, W.shape[1]):
             P = naive_bayes(all_W, W[:,j], term_used[i])
             result.append(np.argmax(P))
         result = np.array(result)
@@ -80,7 +80,10 @@ def hitung_fitness(alpha, beta, total_W_a, total_W_f, total_W_td, populasi):
         print("determining fmeasures")
         Fmeasures = []
         for j in range(3):
-            Fmeasures.append(2 * recalls[j] * precisions[j] / (recalls[j] + precisions[j]))
+            if recalls[j]+precisions[j] > 0:
+                Fmeasures.append(2 * recalls[j] * precisions[j] / float((recalls[j] + precisions[j])))
+            else:
+                Fmeasures.append(0)
         fit = alpha * np.mean(Fmeasures) + beta * (len(terms) - len(term_used[i])) / float(len(terms))
         fitness.append(fit)
     return fitness
@@ -135,7 +138,7 @@ for i in range(2):
     gbest_val = fitness[np.argmax(fitness)]
     for j in range(v.shape[0]):
         for k in range(v.shape[1]):
-            v[j,k] = b_inersia * v + c1 * random.random() * (pbest_val[j] - populasi[j,k]) + c2 * random.random() * (gbest_val - populasi[j,k])
+            v[j,k] = b_inersia * v[j,k] + c1 * random.random() * (pbest_val[j] - populasi[j,k]) + c2 * random.random() * (gbest_val - populasi[j,k])
             sig_v = 1 / (1 + pow(math.e, (-v[j,k])))
             if populasi[j,k] < sig_v:
                 populasi[j,k] = 1
