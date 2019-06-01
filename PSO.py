@@ -137,19 +137,21 @@ for i in range(2):
             if new_pbest[j] > pbest_val[j]:
                 pbest_val[j] = new_pbest[j]
                 pbest_iter_idx[j] = i
-    gbest_idx = np.argmax(fitness)
-    gbest_val = fitness[np.argmax(fitness)]
+    gbest_idx = np.argmax(pbest_val)
+    gbest_val = fitness[gbest_idx]
     gbest_values = np.append(gbest_values, gbest_val)
     for j in range(v.shape[0]):
         for k in range(v.shape[1]):
             v[j,k] = b_inersia * v[j,k] + c1 * random.random() * (pbest_val[j] - populasi[j,k]) + c2 * random.random() * (gbest_val - populasi[j,k])
             sig_v = 1 / (1 + pow(math.e, (-v[j,k])))
-            if populasi[j,k] < sig_v:
+            if random.randint(0,1) < sig_v:
                 populasi[j,k] = 1
             else:
                 populasi[j,k] = 0
     
 #SIMPAN TERM DARI GBEST
+df = pd.DataFrame(gbest_values.T)
+df.to_excel('Nilai Gbest.xlsx', index='False')
 gbest = populasi[gbest_idx]
 gbest_terms = []
 for i in range(len(terms)):
