@@ -9,7 +9,9 @@ import pandas as pd
 import numpy as np
 import random
 import math
+import time
 
+starttime = time.time()
 W = np.array(pd.read_excel('bobot awal.xlsx')).T
 #terms = np.array(pd.read_excel('terms.xlsx'))
 file = open('terms.txt', 'r')
@@ -122,6 +124,7 @@ print("evaluate fitness and generating")
 alpha = 0.85
 beta = 0.15
 v = np.zeros((populasi.shape))
+gbest_values = np.array([])
 for i in range(2):
     print("generation", (i+1))
     fitness = hitung_fitness(alpha, beta, total_W_a, total_W_f, total_W_td, populasi)
@@ -136,6 +139,7 @@ for i in range(2):
                 pbest_iter_idx[j] = i
     gbest_idx = np.argmax(fitness)
     gbest_val = fitness[np.argmax(fitness)]
+    gbest_values = np.append(gbest_values, gbest_val)
     for j in range(v.shape[0]):
         for k in range(v.shape[1]):
             v[j,k] = b_inersia * v[j,k] + c1 * random.random() * (pbest_val[j] - populasi[j,k]) + c2 * random.random() * (gbest_val - populasi[j,k])
@@ -145,3 +149,20 @@ for i in range(2):
             else:
                 populasi[j,k] = 0
     
+#SIMPAN TERM DARI GBEST
+gbest = populasi[gbest_idx]
+gbest_terms = []
+for i in range(len(terms)):
+    if gbest[i] == 1:
+        gbest_terms.append(terms[i])
+file = open('term gbest.txt', 'w')
+for term in gbest_terms:
+    file.write('%s ' % term)
+file.close()
+
+exec_time = time.time() - starttime
+seconds = exec_time % 60
+minutes = exec_time // 60
+hours = minutes // 60
+minutes = minutes % 60
+print("Total execution time: %d hours %d minutes %d seconds." % (hours, minutes, seconds))
