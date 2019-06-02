@@ -125,6 +125,8 @@ alpha = 0.85
 beta = 0.15
 v = np.zeros((populasi.shape))
 gbest_values = np.array([])
+gbest_conv = 0
+gbest_val = 0
 for i in range(2):
     print("generation", (i+1))
     fitness = hitung_fitness(alpha, beta, total_W_a, total_W_f, total_W_td, populasi)
@@ -138,6 +140,10 @@ for i in range(2):
                 pbest_val[j] = new_pbest[j]
                 pbest_iter_idx[j] = i
     gbest_idx = np.argmax(pbest_val)
+    if gbest_val == fitness[gbest_idx]:
+        gbest_conv += 1
+    else:
+        gbest_conv = 0
     gbest_val = fitness[gbest_idx]
     gbest_values = np.append(gbest_values, gbest_val)
     for j in range(v.shape[0]):
@@ -148,7 +154,8 @@ for i in range(2):
                 populasi[j,k] = 1
             else:
                 populasi[j,k] = 0
-    
+    if gbest_conv >= 10:
+        break
 #SIMPAN TERM DARI GBEST
 df = pd.DataFrame(gbest_values.T)
 df.to_excel('Nilai Gbest.xlsx', index='False')
