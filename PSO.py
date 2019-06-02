@@ -99,26 +99,7 @@ populasi = np.zeros((3,len(terms)))
 for i in range(populasi.shape[0]):
     for j in range(populasi.shape[1]):
         populasi[i,j] = random.randint(0,1)
-print("find and sum used features")
-term_used = []
-total_W_a = []
-total_W_f = []
-total_W_td = []
-for i in range(populasi.shape[0]):
-    temp = []
-    tmp_a = []
-    tmp_f = []
-    tmp_td = []
-    for j in range(populasi.shape[1]):
-        if populasi[i,j] == 1:
-            temp.append(j)
-            tmp_a.append(sum(W[j,:125]))
-            tmp_f.append(sum(W[j,125:250]))
-            tmp_td.append(sum(W[j,250:]))
-    term_used.append(temp)
-    total_W_a.append(tmp_a)
-    total_W_f.append(tmp_f)
-    total_W_td.append(tmp_td)
+
 #HITUNG FITNESS
 print("evaluate fitness and generating")
 alpha = 0.85
@@ -129,6 +110,26 @@ gbest_conv = 0
 gbest_val = 0
 for i in range(2):
     print("generation", (i+1))
+    print("find and sum used features")
+    term_used = []
+    total_W_a = []
+    total_W_f = []
+    total_W_td = []
+    for i in range(populasi.shape[0]):
+        temp = []
+        tmp_a = []
+        tmp_f = []
+        tmp_td = []
+        for j in range(populasi.shape[1]):
+            if populasi[i,j] == 1:
+                temp.append(j)
+                tmp_a.append(sum(W[j,:125]))
+                tmp_f.append(sum(W[j,125:250]))
+                tmp_td.append(sum(W[j,250:]))
+        term_used.append(temp)
+        total_W_a.append(tmp_a)
+        total_W_f.append(tmp_f)
+        total_W_td.append(tmp_td)
     fitness = hitung_fitness(alpha, beta, total_W_a, total_W_f, total_W_td, populasi)
     if i == 0:
         pbest_val = fitness
