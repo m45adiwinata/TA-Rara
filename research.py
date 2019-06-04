@@ -37,7 +37,7 @@ def tokenize(kalimat):
                 term.append(w)
             else:
                 if len(term) > 0:
-                    token.append('').join(term)
+                    token.append(('').join(term))
                     term = []
         token.append(('').join(term))
     return (' ').join(token)
