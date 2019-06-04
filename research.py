@@ -35,6 +35,10 @@ def tokenize(kalimat):
         for w in lw:
             if w.isalpha() == True:
                 term.append(w)
+            else:
+                if len(term) > 0:
+                    token.append('').join(term)
+                    term = []
         token.append(('').join(term))
     return (' ').join(token)
     

@@ -162,13 +162,18 @@ df = pd.DataFrame(gbest_values.T)
 df.to_excel('Nilai Gbest.xlsx', index='False')
 gbest = populasi[gbest_idx]
 gbest_terms = []
+gbest_W = []
 for i in range(len(terms)):
     if gbest[i] == 1:
         gbest_terms.append(terms[i])
+        gbest_W.append(W[i,:])
 file = open('term gbest.txt', 'w')
 for term in gbest_terms:
     file.write('%s ' % term)
 file.close()
+gbest_W = np.array(gbest_W)
+df = pd.DataFrame(gbest_W)
+df.to_excel('Bobot Gbest.xlsx', index='False')
 
 exec_time = time.time() - starttime
 seconds = exec_time % 60
