@@ -115,17 +115,17 @@ for i in range(2):
     total_W_a = []
     total_W_f = []
     total_W_td = []
-    for i in range(populasi.shape[0]):
+    for j in range(populasi.shape[0]):
         temp = []
         tmp_a = []
         tmp_f = []
         tmp_td = []
-        for j in range(populasi.shape[1]):
-            if populasi[i,j] == 1:
+        for k in range(populasi.shape[1]):
+            if populasi[j,k] == 1:
                 temp.append(j)
-                tmp_a.append(sum(W[j,:125]))
-                tmp_f.append(sum(W[j,125:250]))
-                tmp_td.append(sum(W[j,250:]))
+                tmp_a.append(sum(W[k,:125]))
+                tmp_f.append(sum(W[k,125:250]))
+                tmp_td.append(sum(W[k,250:]))
         term_used.append(temp)
         total_W_a.append(tmp_a)
         total_W_f.append(tmp_f)
