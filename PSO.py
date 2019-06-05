@@ -134,18 +134,20 @@ for i in range(2):
     if i == 0:
         pbest_val = fitness
         pbest_iter_idx = np.zeros(populasi.shape[0])
+        pbest_pop = populasi
     else:
         new_pbest = fitness
         for j in range(len(pbest_val)):
             if new_pbest[j] > pbest_val[j]:
                 pbest_val[j] = new_pbest[j]
                 pbest_iter_idx[j] = i
+                pbest_pop[j] = populasi[j]
     gbest_idx = np.argmax(pbest_val)
     if gbest_val == fitness[gbest_idx]:
         gbest_conv += 1
     else:
         gbest_conv = 0
-    gbest_val = fitness[gbest_idx]
+    gbest_val = pbest_val[gbest_idx]
     gbest_values = np.append(gbest_values, gbest_val)
     for j in range(v.shape[0]):
         for k in range(v.shape[1]):
@@ -160,7 +162,7 @@ for i in range(2):
 #SIMPAN TERM DARI GBEST
 df = pd.DataFrame(gbest_values.T)
 df.to_excel('Nilai Gbest.xlsx', index='False')
-gbest = populasi[gbest_idx]
+gbest = pbest_pop[gbest_idx]
 gbest_terms = []
 gbest_W = []
 for i in range(len(terms)):
