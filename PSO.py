@@ -143,7 +143,7 @@ for i in range(2):
                 pbest_iter_idx[j] = i
                 pbest_pop[j] = populasi[j]
     gbest_idx = np.argmax(pbest_val)
-    if gbest_val == fitness[gbest_idx]:
+    if gbest_val == pbest_val[gbest_idx]:
         gbest_conv += 1
     else:
         gbest_conv = 0
