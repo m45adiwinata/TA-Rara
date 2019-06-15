@@ -69,6 +69,12 @@ def naive_bayes(all_W, W_uji, term_used):
     P[2] *= pr_TD
     return P
 
+learned_terms = np.array([])
+file = open('term gbest.txt', 'r')
+for f in file:
+    f = f.strip()
+    learned_terms = np.append(learned_terms, f.split(' '))
+
 datas = []
 for cerpen in cerpens:
     for cer in cerpen:
@@ -79,15 +85,9 @@ for cerpen in cerpens:
             kalimat.append(c)
         data = np.array([])
         for k in kalimat:
-            katastop = stopword.remove(k)
-            katastop = tokenize(katastop)
-            katadasar = stemmer.stem(katastop)
-            katastop = stopword.remove(katadasar)
-            temp = 0
-            while len(katastop) != temp:
-                temp = len(katastop)
-                katastop = stopword.remove(katastop)
-            data = np.append(data, katastop.split(' '))
+            for kata in k.split(' '):
+                if np.argwhere(learned_terms == kata).size > 0:
+                    data = np.append(data, kata)
         datas.append(data)
 
 terms = np.array([])
@@ -99,24 +99,56 @@ for i in range(len(datas)):
             if np.argwhere(terms == datas[i][j]).size == 0:
                 terms = np.append(terms, datas[i][j])
                 
-learned_terms = np.array([])
-file = open('term gbest.txt', 'r')
-for f in file:
-    f = f.strip()
-    learned_terms = np.append(learned_terms, f.split(' '))
+tf = np.zeros((terms.size, 150))
+for i in range(len(datas)):
+    for j in range(len(datas[i])):
+        for k in range(tf.shape[0]):
+            if terms[k] == datas[i][j]:
+                tf[k][i] += 1
+
+IDF = np.array([])
+for i in range(terms.size):
+    D = len(datas)
+    df = len(np.nonzero(tf[i,:])[0])
+    IDF = np.append(IDF, math.log(D/df))
+
+W = np.zeros((len(datas), terms.size))
+for i in range(W.shape[0]):
+    for j in range(W.shape[1]):
+        W[i,j] = tf[j,i] * (IDF[j] + 1)
 
 bobot = np.array(pd.read_excel('Bobot Gbest.xlsx'))
 results = []
-for data in datas:
+for x in range(len(datas)):
+    data = datas[x]
+    P = [np.zeros(terms.size)]
+    for i in range(P[0].size):
+        for d in data:
+            if np.argwhere(terms[i] == d).size > 0:
+                P[0][i] = 1
     total_used_W_a = []
     total_used_W_f = []
     total_used_W_td = []
     term_used = []
-    for i in range(learned_terms.size):
-        if np.argwhere(learned_terms[i] == data).size > 0:
-            total_used_W_a.append(np.sum(bobot[i,:125]))
-            total_used_W_f.append(np.sum(bobot[i,125:250]))
-            total_used_W_td.append(np.sum(bobot[i,250:]))
-            term_used.append(i)
-    all_W = [total_used_W_a, total_used_W_f, total_used_W_td]
-    P = naive_bayes(all_W, )
+    for j in range(len(P)):
+        temp = []
+        tmp_a = []
+        tmp_f = []
+        tmp_td = []
+        for k in range(P[0].size):
+            if P[j][k] == 1:
+                temp.append(j)
+                tmp_a.append(sum(W[:50,k]))
+                tmp_f.append(sum(W[50:100,k]))
+                tmp_td.append(sum(W[100:,k]))
+        term_used.append(temp)
+        total_used_W_a.append(tmp_a)
+        total_used_W_f.append(tmp_f)
+        total_used_W_td.append(tmp_td)
+    all_W = [total_used_W_a[0], total_used_W_f[0], total_used_W_td[0]]
+    result = naive_bayes(all_W, W[x,:], term_used[0])
+    results.append(np.argmax(result))
+results = np.array(results)
+akurasi = np.argwhere(results[:50] == 0).size + np.argwhere(results[50:100] == 1).size + np.argwhere(results[100:] == 2).size
+akurasi /= float(150)
+print('Selamat! Akurasi sistem anda: %f%' % akurasi*100)
