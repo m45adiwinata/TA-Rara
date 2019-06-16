@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue Jun 11 17:19:15 2019
+Created on Sun Jun 16 13:55:39 2019
 
-@author: Grenceng
+@author: ACER
 """
 
 import pandas as pd
@@ -71,12 +71,6 @@ def naive_bayes(all_W, W_uji, term_used):
     P[2] *= pr_TD
     return P
 
-learned_terms = np.array([])
-file = open('term gbest.txt', 'r')
-for f in file:
-    f = f.strip()
-    learned_terms = np.append(learned_terms, f.split(' '))
-
 datas = []
 for cerpen in cerpens:
     for cer in cerpen:
@@ -87,9 +81,16 @@ for cerpen in cerpens:
             kalimat.append(c)
         data = np.array([])
         for k in kalimat:
-            for kata in k.split(' '):
-                if np.argwhere(learned_terms == kata).size > 0:
-                    data = np.append(data, kata)
+            katastop = stopword.remove(k)
+            katastop = tokenize(katastop)
+            katadasar = stemmer.stem(katastop)
+            katastop = stopword.remove(katadasar)
+            temp = 0
+            while len(katastop) != temp:
+                temp = len(katastop)
+                katastop = stopword.remove(katastop)
+            data = np.append(data, katastop.split(' '))
+            data = np.delete(data, np.argwhere(data == '').flatten())
         datas.append(data)
 
 terms = np.array([])
@@ -119,7 +120,6 @@ for i in range(W.shape[0]):
     for j in range(W.shape[1]):
         W[i,j] = tf[j,i] * (IDF[j] + 1)
 
-bobot = np.array(pd.read_excel('Bobot Gbest.xlsx'))
 results = []
 for x in range(len(datas)):
     data = datas[x]
@@ -153,7 +153,7 @@ for x in range(len(datas)):
 results = np.array(results)
 akurasi = np.argwhere(results[:50] == 0).size + np.argwhere(results[50:100] == 1).size + np.argwhere(results[100:] == 2).size
 akurasi /= float(150)
-print('Selamat! Akurasi sistem anda: %f %' % akurasi*100)
+print('Selamat! Akurasi sistem anda: %f%' % akurasi*100)
 exec_time = time.time() - starttime
 seconds = exec_time % 60
 minutes = exec_time // 60
