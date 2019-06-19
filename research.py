@@ -92,12 +92,12 @@ for i in range(W.shape[0]):
     for j in range(W.shape[1]):
         W[i,j] = tf[j,i] * (IDF[j] + 1)
 df = pd.DataFrame(W)
-df.to_excel('bobot awal.xlsx', index=False)
+df.to_excel('bobot awal Data Edit.xlsx', index=False)
 tf = pd.DataFrame(tf)
-tf.to_excel('term frequency.xlsx', index=False, header=False)
-file = open('terms.txt', 'w')
+tf.to_excel('term frequency Data Edit.xlsx', index=False, header=False)
+file = open('terms Data Edit.txt', 'w')
 for t in terms:
     file.write("%s " % t)
 file.close()
 idf = pd.DataFrame(IDF)
-idf.to_excel('IDF.xlsx', index=False, header=False)
+idf.to_excel('IDF Data Edit.xlsx', index=False, header=False)

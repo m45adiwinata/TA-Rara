@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" class=" js no-touch">
+
+<head>
+  <title>Perpus Cerpen</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,600|Raleway:600,300|Josefin+Slab:400,700,600italic,600,400italic' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" type="text/css" href="css/slick-team-slider.css" />
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+  <!-- =======================================================
+    Theme Name: Tempo
+    Theme URL: https://bootstrapmade.com/tempo-free-onepage-bootstrap-theme/
+    Author: BootstrapMade.com
+    Author URL: https://bootstrapmade.com
+  ======================================================= -->
+</head>
+
+<body>
+  <!--HEADER START-->
+  <div class="main-navigation navbar-fixed-top">
+    <nav class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+			    <span class="icon-bar"></span>
+			    <span class="icon-bar"></span>
+			    <span class="icon-bar"></span>
+			  </button>
+          <a class="navbar-brand" href="index.html">Perpus Cerpen</a>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="NB.html">NB</a></li>
+            <li><a href="NB-PSO.html">NB-PSO</a></li>
+            <li class="active"><a href="Koleksi.html">Koleksi</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </div>
+  <!--HEADER END-->
+
+  <!-- KOLEKSI START -->
+  <div id="koleksi">
+    <div class="container">
+      <div class="page-title text-center">
+        <h1>Koleksi Cerpen</h1>
+        <p class="big text-center">Temukan Beranekaragam Koleksi Cerpen<br>Di Sini</p>
+        <hr class="pg-titl-bdr-btm"></hr>
+      </div>
+      <div class="row">
+        <div class="col-lg-12">
+          <ul id="koleksi-flters">
+            <li data-filter=".filter-anak" onclick="setActive(this)">Anak</li>
+            <li data-filter=".filter-fantasi" onclick="setActive(this)">Fantasi</li>
+            <li data-filter=".filter-lain" onclick="setActive(this)">Lain-lain</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="list-group">
+        <button type="button" class="list-group-item"><a href="View.html">Cras justo odio</a></button>
+        <button type="button" class="list-group-item">Dapibus ac facilisis in</button>
+        <button type="button" class="list-group-item">Morbi leo risus</button>
+        <button type="button" class="list-group-item">Porta ac consectetur ac</button>
+        <button type="button" class="list-group-item">Vestibulum at eros</button>
+        <button type="button" class="list-group-item">Cras justo odio</button>
+        <button type="button" class="list-group-item">Dapibus ac facilisis in</button>
+        <button type="button" class="list-group-item">Morbi leo risus</button>
+        <button type="button" class="list-group-item">Porta ac consectetur ac</button>
+        <button type="button" class="list-group-item">Vestibulum at eros</button>
+      </div>
+
+      <nav aria-label="..." class="text-center">
+        <ul class="pagination">
+          <li class="disabled"><a href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+          <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
+          <li><a href="#">2 <span class="sr-only">(current)</span></a></li>
+          <li><a href="#">3 <span class="sr-only">(current)</span></a></li>
+          <li><a href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+  <!-- KOLEKSI END -->
+
+  <script>
+    function setActive(el){
+      $('li').removeClass('filter-active');
+      $(el).addClass('filter-active');
+    }
+  </script>
+
+  <script src="js/jquery.min.js"></script>
+  <script src="js/jquery.easing.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="js/slick.min.js"></script>
+  <script type="text/javascript" src="js/custom.js"></script>
+  <script src="contactform/contactform.js"></script>
+
+</body>
+
+</html>
