@@ -94,10 +94,11 @@ for cerpen in cerpens:
         datas.append(data)
 
 temp_f = open('terms Data Edit.txt', 'r')
-terms_awal = np.array([])
+terms_awal = []
 for f in temp_f:
     f = f.strip()
-    terms_awal = np.append(terms_awal, f)
+    terms_awal.append(f)
+terms_awal = np.array(terms_awal)
 terms = np.array([])
 for i in range(len(datas)):
     for j in range(datas[i].size):
@@ -107,7 +108,21 @@ for i in range(len(datas)):
             else:
                 if np.argwhere(terms == datas[i][j]).size == 0:
                     terms = np.append(terms, datas[i][j])
-IDF = np.array(pd.read_excel('IDF Data Edit.xlsx'))                
+
+tf = np.zeros((terms.size, 150))
+for i in range(len(datas)):
+    for j in range(len(datas[i])):
+        for k in range(tf.shape[0]):
+            if terms[k] == datas[i][j]:
+                tf[k][i] += 1
+terms_idx = []
+for term in terms:
+    terms_idx.append(np.argwhere(terms_awal == term).flatten()[0])
+IDF = np.array(pd.read_excel('IDF Data Edit.xlsx')).flatten()
+W = np.zeros((len(datas), terms.size))
+for i in range(W.shape[0]):
+    for j in range(W.shape[1]):
+        W[i,j] = tf[j,i] * (IDF[terms_idx[j]] + 1)
 W = np.array(pd.read_excel('bobot awal Data Edit.xlsx'))
 
 results = []
