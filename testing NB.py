@@ -123,7 +123,6 @@ W = np.zeros((len(datas), terms.size))
 for i in range(W.shape[0]):
     for j in range(W.shape[1]):
         W[i,j] = tf[j,i] * (IDF[terms_idx[j]] + 1)
-W = np.array(pd.read_excel('bobot awal Data Edit.xlsx'))
 
 results = []
 for x in range(len(datas)):
