@@ -98,7 +98,7 @@ terms_awal = []
 for f in temp_f:
     f = f.strip()
     terms_awal.append(f)
-terms_awal = np.array(terms_awal)
+terms_awal = np.array(terms_awal[0].split(' '))
 terms = np.array([])
 for i in range(len(datas)):
     for j in range(datas[i].size):
