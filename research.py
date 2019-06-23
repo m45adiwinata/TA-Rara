@@ -100,4 +100,4 @@ for t in terms:
     file.write("%s " % t)
 file.close()
 idf = pd.DataFrame(IDF)
-idf.to_excel('IDF Data Edit.xlsx', index=False, header=False)
+idf.to_excel('IDF Data Edit.xlsx', index=False)
