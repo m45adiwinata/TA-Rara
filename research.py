@@ -56,10 +56,10 @@ for cerpen in cerpens:
             katastop = tokenize(katastop)
             katadasar = stemmer.stem(katastop)
             katastop = stopword.remove(katadasar)
-            temp = 0
-            while len(katastop) != temp:
-                temp = len(katastop)
-                katastop = stopword.remove(katastop)
+            #temp = 0
+            #while len(katastop) != temp:
+            #    temp = len(katastop)
+            #    katastop = stopword.remove(katastop)
             data = np.append(data, katastop.split(' '))
             data = np.delete(data, np.argwhere(data == '').flatten())
         datas.append(data)
