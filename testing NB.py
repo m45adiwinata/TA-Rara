@@ -71,6 +71,13 @@ def naive_bayes(all_W, W_uji, term_used):
     P[2] *= pr_TD
     return P
 
+temp_f = open('terms Data No Edit.txt', 'r')
+terms_awal = []
+for f in temp_f:
+    f = f.strip()
+    terms_awal.append(f)
+terms_awal = np.array(terms_awal[0].split(' '))
+
 datas = []
 for cerpen in cerpens:
     for cer in cerpen:
@@ -85,20 +92,12 @@ for cerpen in cerpens:
             katastop = tokenize(katastop)
             katadasar = stemmer.stem(katastop)
             katastop = stopword.remove(katadasar)
-            temp = 0
-            while len(katastop) != temp:
-                temp = len(katastop)
-                katastop = stopword.remove(katastop)
-            data = np.append(data, katastop.split(' '))
-            data = np.delete(data, np.argwhere(data == '').flatten())
+            katas = katastop.split(' ')
+            for kata in katas:
+                if np.argwhere(terms_awal == kata).size > 0:
+                    data = np.append(data, kata)
+            #data = np.delete(data, np.argwhere(data == '').flatten())
         datas.append(data)
-
-temp_f = open('terms Data Edit.txt', 'r')
-terms_awal = []
-for f in temp_f:
-    f = f.strip()
-    terms_awal.append(f)
-terms_awal = np.array(terms_awal[0].split(' '))
 
 W = np.array(pd.read_excel('bobot awal Data Edit.xlsx'))
 
@@ -133,7 +132,7 @@ for x in range(len(datas)):
     #results.append(np.argmax(result))
     if x < 50 :
         results.append(np.argmax(result))
-    elif x < 100 and x >= 50:
+    elif x < 100 :
         if result[0] == result[1]:
             if result[1] > result[2]:
                 results.append(1)

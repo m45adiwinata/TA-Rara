@@ -7,8 +7,6 @@ Created on Tue Jun 11 17:19:15 2019
 
 import pandas as pd
 import numpy as np
-import random
-import math
 import time
 import os
 from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
@@ -71,11 +69,12 @@ def naive_bayes(all_W, W_uji, term_used):
     P[2] *= pr_TD
     return P
 
-learned_terms = np.array([])
-file = open('term gbest.txt', 'r')
-for f in file:
+temp_f = open('term gbest Data Edit Pop2.txt', 'r')
+terms_awal = []
+for f in temp_f:
     f = f.strip()
-    learned_terms = np.append(learned_terms, f.split(' '))
+    terms_awal.append(f)
+terms_awal = np.array(terms_awal[0].split(' '))
 
 datas = []
 for cerpen in cerpens:
@@ -88,51 +87,18 @@ for cerpen in cerpens:
         data = np.array([])
         for k in kalimat:
             for kata in k.split(' '):
-                if np.argwhere(learned_terms == kata).size > 0:
+                if np.argwhere(terms_awal == kata).size > 0:
                     data = np.append(data, kata)
         datas.append(data)
 
-temp_f = open('terms Data Edit.txt', 'r')
-terms_awal = []
-for f in temp_f:
-    f = f.strip()
-    terms_awal.append(f)
-terms_awal = np.array(terms_awal)
-terms = np.array([])
-for i in range(len(datas)):
-    for j in range(datas[i].size):
-        if np.argwhere(terms_awal == datas[i][j]).size > 0:
-            if terms.size == 0:
-                terms = np.append(terms, datas[i][j])
-            else:
-                if np.argwhere(terms == datas[i][j]).size == 0:
-                    terms = np.append(terms, datas[i][j])
-                
-tf = np.zeros((terms.size, 150))
-for i in range(len(datas)):
-    for j in range(len(datas[i])):
-        for k in range(tf.shape[0]):
-            if terms[k] == datas[i][j]:
-                tf[k][i] += 1
-
-terms_idx = []
-for term in terms:
-    terms_idx.append(np.argwhere(terms_awal == term).flatten()[0])
-IDF = np.array(pd.read_excel('IDF Data Edit.xlsx')).flatten()
-W = np.zeros((len(datas), terms.size))
-for i in range(W.shape[0]):
-    for j in range(W.shape[1]):
-        W[i,j] = tf[j,i] * (IDF[terms_idx[j]] + 1)
-
-bobot = np.array(pd.read_excel('Bobot Gbest.xlsx'))
+W = np.array(pd.read_excel('Bobot Gbest Data Edit Pop2.xlsx'))
 results = []
 for x in range(len(datas)):
     data = datas[x]
-    P = [np.zeros(terms.size)]
+    P = [np.zeros(terms_awal.size)]
     for i in range(P[0].size):
-        for d in data:
-            if np.argwhere(terms[i] == d).size > 0:
-                P[0][i] = 1
+        if np.argwhere(data == terms_awal).size > 0:
+            P[0][i] = 1
     total_used_W_a = []
     total_used_W_f = []
     total_used_W_td = []
@@ -145,9 +111,9 @@ for x in range(len(datas)):
         for k in range(P[0].size):
             if P[j][k] == 1:
                 temp.append(j)
-                tmp_a.append(sum(W[:50,k]))
-                tmp_f.append(sum(W[50:100,k]))
-                tmp_td.append(sum(W[100:,k]))
+                tmp_a.append(sum(W[:125,k]))
+                tmp_f.append(sum(W[125:250,k]))
+                tmp_td.append(sum(W[250:,k]))
         term_used.append(temp)
         total_used_W_a.append(tmp_a)
         total_used_W_f.append(tmp_f)
