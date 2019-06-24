@@ -117,7 +117,7 @@ def hitung_fitness(total_W_a, total_W_f, total_W_td, populasi, alpha, beta):
     print("Fitness : ", fitness)    
     return fitness
 
-b_inersia = 0.1
+b_inersia = 0.5
 c1 = 2.3
 c2 = 1.8
 alpha = 0.85
@@ -134,7 +134,7 @@ print("evaluate fitness and generating")
 v = np.zeros((populasi.shape))
 gbest_values = np.array([])
 gbest_val = 0
-for i in range(30):
+for i in range(3):
     print("generation", (i+1))
     print("find and sum used features")
     gbest_conv = 0
@@ -197,7 +197,7 @@ for i in range(30):
         break
 #SIMPAN TERM DARI GBEST
 df = pd.DataFrame(gbest_values.T)
-df.to_excel('Nilai Gbest Data Edit Pop2.xlsx', index='False')
+df.to_excel('Nilai Gbest Data Edit Pop2 Iner5.xlsx', index='False')
 gbest = pbest_pop[gbest_idx]
 gbest_terms = []
 gbest_W = []
@@ -205,17 +205,17 @@ for i in range(len(terms)):
     if gbest[i] == 1:
         gbest_terms.append(terms[i])
         gbest_W.append(W[i,:])
-file = open('term gbest Data Edit Pop2.txt', 'w')
+file = open('term gbest Data Edit Pop2 Iner5.txt', 'w')
 for term in gbest_terms:
     file.write('%s ' % term)
 file.close()
 gbest_W = np.array(gbest_W)
 df = pd.DataFrame(gbest_W)
-df.to_excel('Bobot Gbest Data Edit Pop2.xlsx', index='False')
+df.to_excel('Bobot Gbest Data Edit Pop2 Iner5.xlsx', index='False')
 
 exec_time = time.time() - starttime
 seconds = exec_time % 60
 minutes = exec_time // 60
 hours = minutes // 60
 minutes = minutes % 60
-print("Total execution time akurasi Data Edit Pop2 : %d hours %d minutes %d seconds." % (hours, minutes, seconds))
+print("Total execution time akurasi Data Edit Pop2 Iner5 : %d hours %d minutes %d seconds." % (hours, minutes, seconds))

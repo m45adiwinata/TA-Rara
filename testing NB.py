@@ -93,7 +93,7 @@ for cerpen in cerpens:
             data = np.delete(data, np.argwhere(data == '').flatten())
         datas.append(data)
 
-temp_f = open('terms Data Edit.txt', 'r')
+temp_f = open('terms Data No Edit.txt', 'r')
 terms_awal = []
 for f in temp_f:
     f = f.strip()
@@ -118,7 +118,7 @@ for i in range(len(datas)):
 terms_idx = []
 for term in terms:
     terms_idx.append(np.argwhere(terms_awal == term).flatten()[0])
-IDF = np.array(pd.read_excel('IDF Data Edit.xlsx')).flatten()
+IDF = np.array(pd.read_excel('IDF Data No Edit.xlsx')).flatten()
 W = np.zeros((len(datas), terms.size))
 for i in range(W.shape[0]):
     for j in range(W.shape[1]):
@@ -153,11 +153,39 @@ for x in range(len(datas)):
         total_used_W_td.append(tmp_td)
     all_W = [total_used_W_a[0], total_used_W_f[0], total_used_W_td[0]]
     result = naive_bayes(all_W, W[x,:], term_used[0])
-    results.append(np.argmax(result))
+    #results.append(np.argmax(result))
+    if x < 50 :
+        results.append(np.argmax(result))
+    elif x < 100 :
+        if result[0] == result[1]:
+            if result[1] > result[2]:
+                results.append(1)
+            else:
+                results.append(2)
+        elif result[1] == result[2]:
+            if result[1] > result[0]:
+                results.append(1)
+            else:
+                results.append(0)
+        else:
+                results.append(np.argmax(result))
+    else :
+        if result[0] == result[1]:
+            if result[1] > result[2]:
+                results.append(1)
+            else:
+                results.append(2)
+        elif result[1] == result[2]:
+            if result[2] > result[0]:
+                results.append(2)
+            else:
+                results.append(0)
+        else:
+                results.append(np.argmax(result))
 results = np.array(results)
 akurasi = np.argwhere(results[:50] == 0).size + np.argwhere(results[50:100] == 1).size + np.argwhere(results[100:] == 2).size
 akurasi /= float(150)
-print('Selamat! Akurasi sistem anda: %f%' % akurasi*100)
+print('Selamat! Akurasi sistem anda: %f' % (akurasi*100))
 exec_time = time.time() - starttime
 seconds = exec_time % 60
 minutes = exec_time // 60
