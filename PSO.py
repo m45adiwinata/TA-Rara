@@ -57,30 +57,32 @@ def hitung_fitness(total_W_a, total_W_f, total_W_td, populasi, alpha, beta):
             result.append(np.argmax(P))
         for j in range(125, 250):
             P = naive_bayes(all_W, W[:,j], term_used[i])
-            if P[0] == P[1] or P[1] == P[2]:
-                if P[0] > P[1]:
-                    result.append(0)
-                else:
-                    result.append(1)
+            if P[0] == P[1]:
                 if P[1] > P[2]:
                     result.append(1)
                 else:
                     result.append(2)
+            elif P[1] == P[2]:
+                if P[1] > P[0]:
+                    result.append(1)
+                else:
+                    result.append(0)
             else:
-                result.append(np.argmax(P))
+                    result.append(np.argmax(P))
         for j in range(250, W.shape[1]):
             P = naive_bayes(all_W, W[:,j], term_used[i])
-            if P[0] == P[2] or P[1] == P[2]:
-                if P[0] > P[2]:
-                    result.append(0)
-                else:
-                    result.append(2)
+            if P[0] == P[1]:
                 if P[1] > P[2]:
                     result.append(1)
                 else:
                     result.append(2)
+            elif P[1] == P[2]:
+                if P[2] > P[0]:
+                    result.append(2)
+                else:
+                    result.append(0)
             else:
-                result.append(np.argmax(P))
+                    result.append(np.argmax(P))
         result = np.array(result)
         
         print("calculate precisions")

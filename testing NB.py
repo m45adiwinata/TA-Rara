@@ -71,7 +71,7 @@ def naive_bayes(all_W, W_uji, term_used):
     P[2] *= pr_TD
     return P
 
-temp_f = open('terms Data No Edit.txt', 'r')
+temp_f = open('terms Data Edit.txt', 'r')
 terms_awal = []
 for f in temp_f:
     f = f.strip()
