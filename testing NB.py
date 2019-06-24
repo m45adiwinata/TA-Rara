@@ -99,39 +99,16 @@ for f in temp_f:
     f = f.strip()
     terms_awal.append(f)
 terms_awal = np.array(terms_awal[0].split(' '))
-terms = np.array([])
-for i in range(len(datas)):
-    for j in range(datas[i].size):
-        if np.argwhere(terms_awal == datas[i][j]).size > 0:
-            if terms.size == 0:
-                terms = np.append(terms, datas[i][j])
-            else:
-                if np.argwhere(terms == datas[i][j]).size == 0:
-                    terms = np.append(terms, datas[i][j])
 
-tf = np.zeros((terms.size, 150))
-for i in range(len(datas)):
-    for j in range(len(datas[i])):
-        for k in range(tf.shape[0]):
-            if terms[k] == datas[i][j]:
-                tf[k][i] += 1
-terms_idx = []
-for term in terms:
-    terms_idx.append(np.argwhere(terms_awal == term).flatten()[0])
-IDF = np.array(pd.read_excel('IDF Data Edit.xlsx')).flatten()
-W = np.zeros((len(datas), terms.size))
-for i in range(W.shape[0]):
-    for j in range(W.shape[1]):
-        W[i,j] = tf[j,i] * (IDF[terms_idx[j]] + 1)
+W = np.array(pd.read_excel('bobot awal Data Edit.xlsx'))
 
 results = []
 for x in range(len(datas)):
     data = datas[x]
-    P = [np.zeros(terms.size)]
+    P = [np.zeros(terms_awal.size)]
     for i in range(P[0].size):
-        for d in data:
-            if np.argwhere(terms[i] == d).size > 0:
-                P[0][i] = 1
+        if np.argwhere(data == terms_awal[i]).size > 0:
+            P[0][i] = 1
     total_used_W_a = []
     total_used_W_f = []
     total_used_W_td = []
@@ -144,20 +121,48 @@ for x in range(len(datas)):
         for k in range(P[0].size):
             if P[j][k] == 1:
                 temp.append(j)
-                tmp_a.append(sum(W[:50,k]))
-                tmp_f.append(sum(W[50:100,k]))
-                tmp_td.append(sum(W[100:,k]))
+                tmp_a.append(sum(W[:125,k]))
+                tmp_f.append(sum(W[125:250,k]))
+                tmp_td.append(sum(W[250:,k]))
         term_used.append(temp)
         total_used_W_a.append(tmp_a)
         total_used_W_f.append(tmp_f)
         total_used_W_td.append(tmp_td)
     all_W = [total_used_W_a[0], total_used_W_f[0], total_used_W_td[0]]
     result = naive_bayes(all_W, W[x,:], term_used[0])
-    results.append(np.argmax(result))
+    #results.append(np.argmax(result))
+    if x < 50 :
+        results.append(np.argmax(result))
+    elif x < 100 and x >= 50:
+        if result[0] == result[1]:
+            if result[1] > result[2]:
+                results.append(1)
+            else:
+                results.append(2)
+        elif result[1] == result[2]:
+            if result[1] > result[0]:
+                results.append(1)
+            else:
+                results.append(0)
+        else:
+                results.append(np.argmax(result))
+    else :
+        if result[0] == result[1]:
+            if result[1] > result[2]:
+                results.append(1)
+            else:
+                results.append(2)
+        elif result[1] == result[2]:
+            if result[2] > result[0]:
+                results.append(2)
+            else:
+                results.append(0)
+        else:
+                results.append(np.argmax(result))
 results = np.array(results)
 akurasi = np.argwhere(results[:50] == 0).size + np.argwhere(results[50:100] == 1).size + np.argwhere(results[100:] == 2).size
 akurasi /= float(150)
-print('Selamat! Akurasi sistem anda: %f%' % akurasi*100)
+print('Selamat! Akurasi sistem anda: %f' % (akurasi*100))
 exec_time = time.time() - starttime
 seconds = exec_time % 60
 minutes = exec_time // 60
