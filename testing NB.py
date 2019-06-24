@@ -71,6 +71,13 @@ def naive_bayes(all_W, W_uji, term_used):
     P[2] *= pr_TD
     return P
 
+temp_f = open('terms Data Edit.txt', 'r')
+terms_awal = []
+for f in temp_f:
+    f = f.strip()
+    terms_awal.append(f)
+terms_awal = np.array(terms_awal[0].split(' '))
+
 datas = []
 for cerpen in cerpens:
     for cer in cerpen:
@@ -85,53 +92,24 @@ for cerpen in cerpens:
             katastop = tokenize(katastop)
             katadasar = stemmer.stem(katastop)
             katastop = stopword.remove(katadasar)
-            temp = 0
-            while len(katastop) != temp:
-                temp = len(katastop)
-                katastop = stopword.remove(katastop)
-            data = np.append(data, katastop.split(' '))
-            data = np.delete(data, np.argwhere(data == '').flatten())
+            katas = katastop.split(' ')
+            for kata in katas:
+                if np.argwhere(terms_awal == kata).size > 0:
+                    data = np.append(data, kata)
+            #data = np.delete(data, np.argwhere(data == ''))
         datas.append(data)
 
-temp_f = open('terms Data No Edit.txt', 'r')
-terms_awal = []
-for f in temp_f:
-    f = f.strip()
-    terms_awal.append(f)
-terms_awal = np.array(terms_awal[0].split(' '))
-terms = np.array([])
-for i in range(len(datas)):
-    for j in range(datas[i].size):
-        if np.argwhere(terms_awal == datas[i][j]).size > 0:
-            if terms.size == 0:
-                terms = np.append(terms, datas[i][j])
-            else:
-                if np.argwhere(terms == datas[i][j]).size == 0:
-                    terms = np.append(terms, datas[i][j])
 
-tf = np.zeros((terms.size, 150))
-for i in range(len(datas)):
-    for j in range(len(datas[i])):
-        for k in range(tf.shape[0]):
-            if terms[k] == datas[i][j]:
-                tf[k][i] += 1
-terms_idx = []
-for term in terms:
-    terms_idx.append(np.argwhere(terms_awal == term).flatten()[0])
-IDF = np.array(pd.read_excel('IDF Data No Edit.xlsx')).flatten()
-W = np.zeros((len(datas), terms.size))
-for i in range(W.shape[0]):
-    for j in range(W.shape[1]):
-        W[i,j] = tf[j,i] * (IDF[terms_idx[j]] + 1)
+
+W = np.array(pd.read_excel('bobot awal Data Edit.xlsx'))
 
 results = []
 for x in range(len(datas)):
     data = datas[x]
-    P = [np.zeros(terms.size)]
+    P = [np.zeros(terms_awal.size)]
     for i in range(P[0].size):
-        for d in data:
-            if np.argwhere(terms[i] == d).size > 0:
-                P[0][i] = 1
+        if np.argwhere(data == terms_awal[i]).size > 0:
+            P[0][i] = 1
     total_used_W_a = []
     total_used_W_f = []
     total_used_W_td = []
@@ -144,9 +122,9 @@ for x in range(len(datas)):
         for k in range(P[0].size):
             if P[j][k] == 1:
                 temp.append(j)
-                tmp_a.append(sum(W[:50,k]))
-                tmp_f.append(sum(W[50:100,k]))
-                tmp_td.append(sum(W[100:,k]))
+                tmp_a.append(sum(W[:125,k]))
+                tmp_f.append(sum(W[125:250,k]))
+                tmp_td.append(sum(W[250:,k]))
         term_used.append(temp)
         total_used_W_a.append(tmp_a)
         total_used_W_f.append(tmp_f)
@@ -156,7 +134,7 @@ for x in range(len(datas)):
     #results.append(np.argmax(result))
     if x < 50 :
         results.append(np.argmax(result))
-    elif x < 100 :
+    elif x < 100 and x >= 50:
         if result[0] == result[1]:
             if result[1] > result[2]:
                 results.append(1)
