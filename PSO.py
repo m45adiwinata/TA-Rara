@@ -22,9 +22,9 @@ file.close()
 #IDF = np.array(pd.read_excel('IDF.xlsx'))
 
 def naive_bayes(all_W, W_uji, term_used):
-    pr_A = 125/float(350)
-    pr_F = 125/float(350)
-    pr_TD = 100/float(350)
+    pr_A = 175/float(525)
+    pr_F = 175/float(525)
+    pr_TD = 175/float(525)
     p_term = []
     all_W = np.array(all_W)
     total_t = sum(all_W[0,:]) + sum(all_W[1,:]) + sum(all_W[2,:])
@@ -52,10 +52,10 @@ def hitung_fitness(total_W_a, total_W_f, total_W_td, populasi, alpha, beta):
         all_W = [total_W_a[i], total_W_f[i], total_W_td[i]]
         result = []
         print("naive bayes clasification step")
-        for j in range(125):
+        for j in range(175):
             P = naive_bayes(all_W, W[:,j], term_used[i])
             result.append(np.argmax(P))
-        for j in range(125, 250):
+        for j in range(175, 350):
             P = naive_bayes(all_W, W[:,j], term_used[i])
             if P[0] == P[1]:
                 if P[1] > P[2]:
@@ -69,7 +69,7 @@ def hitung_fitness(total_W_a, total_W_f, total_W_td, populasi, alpha, beta):
                     result.append(0)
             else:
                     result.append(np.argmax(P))
-        for j in range(250, W.shape[1]):
+        for j in range(350, W.shape[1]):
             P = naive_bayes(all_W, W[:,j], term_used[i])
             if P[0] == P[1]:
                 if P[1] > P[2]:
@@ -87,22 +87,22 @@ def hitung_fitness(total_W_a, total_W_f, total_W_td, populasi, alpha, beta):
         
         print("calculate precisions")
         if np.argwhere(result == 0).size > 0:
-            precisions = [np.argwhere(result[:125] == 0).size/float(np.argwhere(result == 0).size)]
+            precisions = [np.argwhere(result[:175] == 0).size/float(np.argwhere(result == 0).size)]
         else:
             precisions = [0]
         if np.argwhere(result == 1).size > 0:
-            precisions.append(np.argwhere(result[125:250] == 1).size/float(np.argwhere(result == 1).size))
+            precisions.append(np.argwhere(result[175:350] == 1).size/float(np.argwhere(result == 1).size))
         else:
             precisions.append(0)
         if np.argwhere(result == 2).size > 0:
-            precisions.append(np.argwhere(result[250:] == 2).size/float(np.argwhere(result == 2).size))
+            precisions.append(np.argwhere(result[350:] == 2).size/float(np.argwhere(result == 2).size))
         else:
             precisions.append(0)
             
         print("calculate recalls")
-        recalls = [np.argwhere(result[:125] == 0).size/float(125)]
-        recalls.append(np.argwhere(result[125:250] == 1).size/float(125))
-        recalls.append(np.argwhere(result[250:] == 2).size/float(100))
+        recalls = [np.argwhere(result[:175] == 0).size/float(175)]
+        recalls.append(np.argwhere(result[175:350] == 1).size/float(175))
+        recalls.append(np.argwhere(result[350:] == 2).size/float(175))
         
         print("determining fmeasures")
         Fmeasures = []
@@ -119,14 +119,14 @@ def hitung_fitness(total_W_a, total_W_f, total_W_td, populasi, alpha, beta):
     print("Fitness : ", fitness)    
     return fitness
 
-b_inersia = 0.5
-c1 = 2.3
-c2 = 1.8
+b_inersia = 0.1
+c1 = 2
+c2 = 2
 alpha = 0.85
 beta = 0.15
 #INISIASI POPULASI
 print("initiating population")
-populasi = np.zeros((2,len(terms)))
+populasi = np.zeros((3,len(terms)))
 for i in range(populasi.shape[0]):
     for j in range(populasi.shape[1]):
         populasi[i,j] = random.randint(0,1)
@@ -136,7 +136,7 @@ print("evaluate fitness and generating")
 v = np.zeros((populasi.shape))
 gbest_values = np.array([])
 gbest_val = 0
-for i in range(3):
+for i in range(30):
     print("generation", (i+1))
     print("find and sum used features")
     gbest_conv = 0
@@ -152,9 +152,9 @@ for i in range(3):
         for k in range(populasi.shape[1]):
             if populasi[j,k] == 1:
                 temp.append(k)
-                tmp_a.append(sum(W[k,:125]))
-                tmp_f.append(sum(W[k,125:250]))
-                tmp_td.append(sum(W[k,250:]))
+                tmp_a.append(sum(W[k,:175]))
+                tmp_f.append(sum(W[k,175:350]))
+                tmp_td.append(sum(W[k,350:]))
         term_used.append(temp)
         total_W_a.append(tmp_a)
         total_W_f.append(tmp_f)
@@ -199,7 +199,7 @@ for i in range(3):
         break
 #SIMPAN TERM DARI GBEST
 df = pd.DataFrame(gbest_values.T)
-df.to_excel('Nilai Gbest Data Edit Pop2 Iner5.xlsx', index='False')
+df.to_excel('Nilai Gbest Data Edit Pop3.xlsx', index='False')
 gbest = pbest_pop[gbest_idx]
 gbest_terms = []
 gbest_W = []
@@ -207,17 +207,17 @@ for i in range(len(terms)):
     if gbest[i] == 1:
         gbest_terms.append(terms[i])
         gbest_W.append(W[i,:])
-file = open('term gbest Data Edit Pop2 Iner5.txt', 'w')
+file = open('term gbest Data Edit Pop3.txt', 'w')
 for term in gbest_terms:
     file.write('%s ' % term)
 file.close()
 gbest_W = np.array(gbest_W)
 df = pd.DataFrame(gbest_W)
-df.to_excel('Bobot Gbest Data Edit Pop2 Iner5.xlsx', index='False')
+df.to_excel('Bobot Gbest Data Edit Pop3.xlsx', index='False')
 
 exec_time = time.time() - starttime
 seconds = exec_time % 60
 minutes = exec_time // 60
 hours = minutes // 60
 minutes = minutes % 60
-print("Total execution time akurasi Data Edit Pop2 Iner5 : %d hours %d minutes %d seconds." % (hours, minutes, seconds))
+print("Total execution time akurasi Data Edit Pop3 : %d hours %d minutes %d seconds." % (hours, minutes, seconds))

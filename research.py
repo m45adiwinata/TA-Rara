@@ -74,7 +74,7 @@ for i in range(len(datas)):
             if np.argwhere(terms == datas[i][j]).size == 0:
                 terms = np.append(terms, datas[i][j])
 
-tf = np.zeros((terms.size, 350))
+tf = np.zeros((terms.size, 525))
 for i in range(len(datas)):
     for j in range(len(datas[i])):
         for k in range(tf.shape[0]):
