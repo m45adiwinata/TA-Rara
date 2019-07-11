@@ -69,7 +69,7 @@ def naive_bayes(all_W, W_uji, term_used):
     P[2] *= pr_TD
     return P
 
-temp_f = open('term gbest Data Edit Pop2.txt', 'r')
+temp_f = open('term gbest Data Edit Pop1.txt', 'r')
 terms_awal = []
 for f in temp_f:
     f = f.strip()
@@ -91,7 +91,7 @@ for cerpen in cerpens:
                     data = np.append(data, kata)
         datas.append(data)
 
-W = np.array(pd.read_excel('Bobot Gbest Data Edit Pop2.xlsx')).T
+W = np.array(pd.read_excel('Bobot Gbest Data Edit Pop1.xlsx')).T
 results = []
 for x in range(len(datas)):
     data = datas[x]
@@ -159,4 +159,4 @@ seconds = exec_time % 60
 minutes = exec_time // 60
 hours = minutes // 60
 minutes = minutes % 60
-print("Total execution time : %d hours %d minutes %d seconds." % (hours, minutes, seconds))
+print("Total execution time pop1 : %d hours %d minutes %d seconds." % (hours, minutes, seconds))
