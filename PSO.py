@@ -21,7 +21,7 @@ for t in file:
 file.close()
 #IDF = np.array(pd.read_excel('IDF.xlsx'))
 
-def naive_bayes(all_W, W_uji, term_used):
+def naive_bayes(all_W, W_uji):
     pr_A = 175/float(525)
     pr_F = 175/float(525)
     pr_TD = 175/float(525)
@@ -37,8 +37,8 @@ def naive_bayes(all_W, W_uji, term_used):
     P = []
     for i in range(len(p_term)):
         temp = 1
-        for j in range(len(p_term)):
-            if W_uji[term_used[j]] > 0:
+        for j in range(len(p_term[i])):
+            if W_uji[j] > 0:
                 temp *= p_term[i][j]
         P.append(temp)
     P[0] *= pr_A
@@ -53,10 +53,10 @@ def hitung_fitness(total_W_a, total_W_f, total_W_td, populasi, alpha, beta):
         result = []
         print("naive bayes clasification step")
         for j in range(175):
-            P = naive_bayes(all_W, W[:,j], term_used[i])
+            P = naive_bayes(all_W, populasi[i])
             result.append(np.argmax(P))
         for j in range(175, 350):
-            P = naive_bayes(all_W, W[:,j], term_used[i])
+            P = naive_bayes(all_W, populasi[i])
             if P[0] == P[1]:
                 if P[1] > P[2]:
                     result.append(1)

@@ -46,7 +46,7 @@ def tokenize(kalimat):
         token.append(('').join(term))
     return (' ').join(token)
 
-def naive_bayes(all_W, W_uji, term_used):
+def naive_bayes(all_W, W_uji):
     pr_A = 175/float(525)
     pr_F = 175/float(525)
     pr_TD = 175/float(525)
@@ -62,8 +62,8 @@ def naive_bayes(all_W, W_uji, term_used):
     P = []
     for i in range(len(p_term)):
         temp = 1
-        for j in range(len(p_term)):
-            if W_uji[term_used[j]] > 0:
+        for j in range(len(p_term[i])):
+            if W_uji[j] > 0:
                 temp *= p_term[i][j]
         P.append(temp)
     P[0] *= pr_A
@@ -113,22 +113,19 @@ for x in range(len(datas)):
     total_used_W_td = []
     term_used = []
     for j in range(len(P)):
-        temp = []
         tmp_a = []
         tmp_f = []
         tmp_td = []
         for k in range(P[0].size):
             if P[j][k] == 1:
-                temp.append(j)
                 tmp_a.append(sum(W[:175,k]))
                 tmp_f.append(sum(W[175:350,k]))
                 tmp_td.append(sum(W[350:,k]))
-        term_used.append(temp)
         total_used_W_a.append(tmp_a)
         total_used_W_f.append(tmp_f)
         total_used_W_td.append(tmp_td)
     all_W = [total_used_W_a[0], total_used_W_f[0], total_used_W_td[0]]
-    result = naive_bayes(all_W, W[x,:], term_used[0])
+    result = naive_bayes(all_W, P[0])
     #results.append(np.argmax(result))
     if x < 50 :
         results.append(np.argmax(result))
