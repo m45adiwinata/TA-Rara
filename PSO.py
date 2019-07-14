@@ -70,7 +70,7 @@ def hitung_fitness(total_W_a, total_W_f, total_W_td, populasi, alpha, beta):
             else:
                     result.append(np.argmax(P))
         for j in range(350, W.shape[1]):
-            P = naive_bayes(all_W, W[:,j], term_used[i])
+            P = naive_bayes(all_W, populasi[i])
             if P[0] == P[1]:
                 if P[1] > P[2]:
                     result.append(1)
