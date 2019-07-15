@@ -124,7 +124,10 @@ IDF = np.array([])
 for i in range(terms.size):
     D = len(datas)
     df = len(np.nonzero(tf[i,:])[0])
-    IDF = np.append(IDF, math.log(D/df))
+    if df > 0:
+        IDF = np.append(IDF, math.log(D/df))
+    else:
+        IDF = np.append(IDF, 0)
 
 W_testing = np.zeros((len(datas), terms.size))
 for i in range(W_testing.shape[0]):
