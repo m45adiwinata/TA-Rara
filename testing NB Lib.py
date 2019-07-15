@@ -133,9 +133,9 @@ for i in range(W_testing.shape[0]):
 
 label_testing = np.array([])
 for i in range(len(datas)):
-    if i < 175:
+    if i < 50:
         label_testing = np.append(label_testing, 0)
-    elif i >= 175 and i < 350:
+    elif i >= 50 and i < 100:
         label_testing = np.append(label_testing, 1)
     else:
         label_testing = np.append(label_testing, 2)

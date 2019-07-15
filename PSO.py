@@ -119,7 +119,7 @@ def hitung_fitness(total_W_a, total_W_f, total_W_td, populasi, alpha, beta):
     print("Fitness : ", fitness)    
     return fitness
 
-b_inersia = 0.1
+b_inersia = 0.3
 c1 = 2
 c2 = 2
 alpha = 0.85
@@ -136,7 +136,7 @@ print("evaluate fitness and generating")
 v = np.zeros((populasi.shape))
 gbest_values = np.array([])
 gbest_val = 0
-for i in range(30):
+for i in range(2):
     print("generation", (i+1))
     print("find and sum used features")
     gbest_conv = 0
@@ -176,9 +176,9 @@ for i in range(30):
     
     gbest_idx = np.argmax(pbest_val)
     
-    for j in range(len(pbest_val)):
-        if pbest_val[j] == pbest_val[gbest_idx]:
-            gbest_conv += 1
+    #for j in range(len(pbest_val)):
+     #   if pbest_val[j] == pbest_val[gbest_idx]:
+      #      gbest_conv += 1
             
     gbest_val = pbest_val[gbest_idx]
     gbest_values = np.append(gbest_values, gbest_val)
@@ -194,12 +194,12 @@ for i in range(30):
                 populasi[j,k] = 0
     
     print("Value Pbest : ", pbest_val)
-    print("Nilai Gbest conv : ", gbest_conv)
-    if gbest_conv == (len(pbest_val)):
-        break
+    #print("Nilai Gbest conv : ", gbest_conv)
+    #if gbest_conv == (len(pbest_val)):
+     #   break
 #SIMPAN TERM DARI GBEST
 df = pd.DataFrame(gbest_values.T)
-df.to_excel('Nilai Gbest Data Edit Pop1.xlsx', index='False')
+df.to_excel('Nilai Gbest Data Edit 0.3.xlsx', index='False')
 gbest = pbest_pop[gbest_idx]
 gbest_terms = []
 gbest_W = []
@@ -207,17 +207,17 @@ for i in range(len(terms)):
     if gbest[i] == 1:
         gbest_terms.append(terms[i])
         gbest_W.append(W[i,:])
-file = open('term gbest Data Edit Pop1.txt', 'w')
+file = open('term gbest Data Edit 0.3.txt', 'w')
 for term in gbest_terms:
     file.write('%s ' % term)
 file.close()
 gbest_W = np.array(gbest_W)
 df = pd.DataFrame(gbest_W)
-df.to_excel('Bobot Gbest Data Edit Pop1.xlsx', index='False')
+df.to_excel('Bobot Gbest Data Edit 0.3.xlsx', index='False')
 
 exec_time = time.time() - starttime
 seconds = exec_time % 60
 minutes = exec_time // 60
 hours = minutes // 60
 minutes = minutes % 60
-print("Total execution time akurasi Data Edit Pop1 : %d hours %d minutes %d seconds." % (hours, minutes, seconds))
+print("Total execution time akurasi Data Edit 0.3 : %d hours %d minutes %d seconds." % (hours, minutes, seconds))
