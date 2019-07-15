@@ -72,7 +72,7 @@ def naive_bayes(all_W, W_uji):
     P[2] *= pr_TD
     return P
 
-temp_f = open('terms Data Edit.txt', 'r')
+temp_f = open('term gbest Data Edit Pop1.txt', 'r')
 terms_awal = []
 for f in temp_f:
     f = f.strip()
@@ -100,7 +100,7 @@ for cerpen in cerpens:
             #data = np.delete(data, np.argwhere(data == '').flatten())
         datas.append(data)
 
-W = np.array(pd.read_excel('bobot awal Data Edit.xlsx'))
+W = np.array(pd.read_excel('Bobot Gbest Data Edit Pop1.xlsx')).T
 label_training = np.array([])
 for i in range(W.shape[0]):
     if i < 175:

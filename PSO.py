@@ -52,10 +52,10 @@ def hitung_fitness(total_W_a, total_W_f, total_W_td, populasi, alpha, beta):
         all_W = [total_W_a[i], total_W_f[i], total_W_td[i]]
         result = []
         print("naive bayes clasification step")
-        for j in range(175):
+        for j in range(50):
             P = naive_bayes(all_W, populasi[i])
             result.append(np.argmax(P))
-        for j in range(175, 350):
+        for j in range(175, 225):
             P = naive_bayes(all_W, populasi[i])
             if P[0] == P[1]:
                 if P[1] > P[2]:
@@ -69,7 +69,7 @@ def hitung_fitness(total_W_a, total_W_f, total_W_td, populasi, alpha, beta):
                     result.append(0)
             else:
                     result.append(np.argmax(P))
-        for j in range(350, W.shape[1]):
+        for j in range(350, 400):
             P = naive_bayes(all_W, populasi[i])
             if P[0] == P[1]:
                 if P[1] > P[2]:
@@ -87,22 +87,22 @@ def hitung_fitness(total_W_a, total_W_f, total_W_td, populasi, alpha, beta):
         
         print("calculate precisions")
         if np.argwhere(result == 0).size > 0:
-            precisions = [np.argwhere(result[:175] == 0).size/float(np.argwhere(result == 0).size)]
+            precisions = [np.argwhere(result[:50] == 0).size/float(np.argwhere(result == 0).size)]
         else:
             precisions = [0]
         if np.argwhere(result == 1).size > 0:
-            precisions.append(np.argwhere(result[175:350] == 1).size/float(np.argwhere(result == 1).size))
+            precisions.append(np.argwhere(result[175:225] == 1).size/float(np.argwhere(result == 1).size))
         else:
             precisions.append(0)
         if np.argwhere(result == 2).size > 0:
-            precisions.append(np.argwhere(result[350:] == 2).size/float(np.argwhere(result == 2).size))
+            precisions.append(np.argwhere(result[350:400] == 2).size/float(np.argwhere(result == 2).size))
         else:
             precisions.append(0)
             
         print("calculate recalls")
-        recalls = [np.argwhere(result[:175] == 0).size/float(175)]
-        recalls.append(np.argwhere(result[175:350] == 1).size/float(175))
-        recalls.append(np.argwhere(result[350:] == 2).size/float(175))
+        recalls = [np.argwhere(result[:50] == 0).size/float(50)]
+        recalls.append(np.argwhere(result[175:225] == 1).size/float(50))
+        recalls.append(np.argwhere(result[350:400] == 2).size/float(50))
         
         print("determining fmeasures")
         Fmeasures = []
