@@ -21,7 +21,12 @@ for t in file:
 file.close()
 #IDF = np.array(pd.read_excel('IDF.xlsx'))
 
-def naive_bayes(all_W, W_uji, idx):
+def naive_bayes(W_uji, idx):
+    all_W = np.zeros((3, len(W_uji)))
+    for j in range(len(W_uji)):
+        all_W[0,j] += sum(W[j,:175])
+        all_W[1,j] += sum(W[j,175:350])
+        all_W[2,j] += sum(W[j,350:])
     if idx < 175:
         pr_A = 174/float(524)
         pr_F = 175/float(524)
@@ -34,19 +39,12 @@ def naive_bayes(all_W, W_uji, idx):
         pr_A = 175/float(524)
         pr_F = 175/float(524)
         pr_TD = 174/float(524)
-    temp = []
-    tmp_a = []
-    tmp_f = []
-    tmp_td = []
-    for j in range(len(W_uji)):
-        if W_uji[j] == 1:
-            temp.append(j)
-            tmp_a.append(sum(W[j,:175]))
-            tmp_f.append(sum(W[j,175:350]))
-            tmp_td.append(sum(W[j,350:]))
+    for i in range(all_W.shape[1]):
+        all_W[0,i] -= W[i,idx]
+        all_W[1,i] -= W[i,idx]
+        all_W[2,i] -= W[i,idx]
     p_term = []
-    all_W = np.array(all_W)
-    total_t = sum(all_W[0,:]) + sum(all_W[1,:]) + sum(all_W[2,:])
+    total_t = np.sum(all_W)
     for i in range(len(all_W)):
         temp = []
         for j in range(len(all_W[i])):
@@ -68,14 +66,13 @@ def naive_bayes(all_W, W_uji, idx):
 def hitung_fitness(populasi, alpha, beta):
     fitness = []
     for i in range(populasi.shape[0]):
-        
         result = []
         print("naive bayes clasification step")
         for j in range(175):
-            P = naive_bayes(all_W, populasi[i])
+            P = naive_bayes(populasi[i], j)
             result.append(np.argmax(P))
         for j in range(175, 350):
-            P = naive_bayes(all_W, populasi[i])
+            P = naive_bayes(populasi[i], j)
             if P[0] == P[1]:
                 if P[1] > P[2]:
                     result.append(1)
@@ -89,7 +86,7 @@ def hitung_fitness(populasi, alpha, beta):
             else:
                     result.append(np.argmax(P))
         for j in range(350, W.shape[1]):
-            P = naive_bayes(all_W, populasi[i])
+            P = naive_bayes(populasi[i],j)
             if P[0] == P[1]:
                 if P[1] > P[2]:
                     result.append(1)
@@ -132,7 +129,7 @@ def hitung_fitness(populasi, alpha, beta):
                 Fmeasures.append(0)
         F1 = np.mean(Fmeasures)
         N = len(terms)
-        F = len(term_used[i])
+        F = np.nonzero(populasi[i])[0].size
         fit = (alpha*F1)+(beta*((N-F)/N))
         fitness.append(fit)
     print("Fitness : ", fitness)    
@@ -160,7 +157,6 @@ for i in range(2):
     print("find and sum used features")
     gbest_conv = 0
     fitness = hitung_fitness(populasi, alpha, beta)
-    
     if i == 0:
         pbest_val = fitness
         pbest_iter_idx = np.zeros(populasi.shape[0])
