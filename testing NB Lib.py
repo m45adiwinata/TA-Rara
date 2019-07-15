@@ -47,31 +47,6 @@ def tokenize(kalimat):
         token.append(('').join(term))
     return (' ').join(token)
 
-def naive_bayes(all_W, W_uji):
-    pr_A = 175/float(525)
-    pr_F = 175/float(525)
-    pr_TD = 175/float(525)
-    p_term = []
-    all_W = np.array(all_W)
-    total_t = sum(all_W[0,:]) + sum(all_W[1,:]) + sum(all_W[2,:])
-    for i in range(len(all_W)):
-        temp = []
-        for j in range(len(all_W[i])):
-            P = (all_W[i,j] + 1) / float(total_t + sum(all_W[i,:]))
-            temp.append(P)
-        p_term.append(temp)
-    P = []
-    for i in range(len(p_term)):
-        temp = 1
-        for j in range(len(p_term[i])):
-            if W_uji[j] > 0:
-                temp *= p_term[i][j]
-        P.append(temp)
-    P[0] *= pr_A
-    P[1] *= pr_F
-    P[2] *= pr_TD
-    return P
-
 temp_f = open('terms Data Edit.txt', 'r')
 terms_awal = []
 for f in temp_f:
