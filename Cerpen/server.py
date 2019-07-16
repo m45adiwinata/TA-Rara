@@ -158,4 +158,4 @@ def NBhasil():
     
 
 if __name__ == '__main__':
-    app.run(port="1010", debug=True)
+    app.run(port=1010, debug=True)
