@@ -72,7 +72,7 @@ def naive_bayes(all_W, W_uji):
     P[2] *= pr_TD
     return P
 
-temp_f = open('term gbest Data Edit 0.9.txt', 'r')
+temp_f = open('term gbest Data Edit 1.0.txt', 'r')
 terms_awal = []
 for f in temp_f:
     f = f.strip()
@@ -100,7 +100,7 @@ for cerpen in cerpens:
             #data = np.delete(data, np.argwhere(data == '').flatten())
         datas.append(data)
 
-W = np.array(pd.read_excel('Bobot Gbest Data Edit 0.9.xlsx')).T
+W = np.array(pd.read_excel('Bobot Gbest Data Edit 1.0.xlsx')).T
 label_training = np.array([])
 for i in range(W.shape[0]):
     if i < 175:
@@ -147,10 +147,10 @@ gnb = GaussianNB()
 gnb.fit(W, label_training)
 pred = gnb.predict(W_testing)
 
-print('Selamat! Akurasi sistem anda 0.9 : %f' % metrics.accuracy_score(pred, label_testing))
+print('Selamat! Akurasi sistem anda 1.0 : %f' % metrics.accuracy_score(pred, label_testing))
 exec_time = time.time() - starttime
 seconds = exec_time % 60
 minutes = exec_time // 60
 hours = minutes // 60
 minutes = minutes % 60
-print("Total execution time 0.9 : %d hours %d minutes %d seconds." % (hours, minutes, seconds))
+print("Total execution time 1.0 : %d hours %d minutes %d seconds." % (hours, minutes, seconds))
