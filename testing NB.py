@@ -12,7 +12,6 @@ import time
 import os
 from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
 from Sastrawi.StopWordRemover.StopWordRemoverFactory import StopWordRemoverFactory
-from sklearn.naive_bayes import GaussianNB
 from sklearn import metrics
 
 starttime = time.time()
@@ -47,32 +46,15 @@ def tokenize(kalimat):
         token.append(('').join(term))
     return (' ').join(token)
 
-def naive_bayes(all_W, W_uji):
-    pr_A = 175/float(525)
-    pr_F = 175/float(525)
-    pr_TD = 175/float(525)
-    p_term = []
-    all_W = np.array(all_W)
-    total_t = sum(all_W[0,:]) + sum(all_W[1,:]) + sum(all_W[2,:])
-    for i in range(len(all_W)):
-        temp = []
-        for j in range(len(all_W[i])):
-            P = (all_W[i,j] + 1) / float(total_t + sum(all_W[i,:]))
-            temp.append(P)
-        p_term.append(temp)
-    P = []
-    for i in range(len(p_term)):
-        temp = 1
-        for j in range(len(p_term[i])):
-            if W_uji[j] > 0:
-                temp *= p_term[i][j]
-        P.append(temp)
-    P[0] *= pr_A
-    P[1] *= pr_F
-    P[2] *= pr_TD
-    return P
+def naive_bayes(test, W, W_mean, W_var, W_std):
+    idx = np.flatnonzero(test)
+    p = np.ones(3)
+    for i in range(p.size):
+        for index in idx:
+            p[i] *= 1/(math.sqrt(2*math.pi)*W_std[i][index])*math.e**((W[index]-W_mean[i][index])**2/(2*W_var[i][index]))
+    return p
 
-temp_f = open('term gbest Data Edit 1.0.txt', 'r')
+temp_f = open('terms Data Edit.txt', 'r')
 terms_awal = []
 for f in temp_f:
     f = f.strip()
@@ -96,7 +78,7 @@ for cerpen in cerpens:
                     data = np.append(data, kata)
         datas.append(data)
 
-W = np.array(pd.read_excel('Bobot Gbest Data Edit 1.0.xlsx')).T
+W = np.array(pd.read_excel('bobot awal Data Edit.xlsx')).T
 label_training = np.array([])
 for i in range(W.shape[0]):
     if i < 175:
@@ -106,13 +88,32 @@ for i in range(W.shape[0]):
     else:
         label_training = np.append(label_training, 2)
 
+W_anak, W_fantasi, W_tidik = W[:175], W[175:350], W[350:]
+W_anak_term_mean, W_fantasi_term_mean, W_tidik_term_mean = np.array([]), np.array([]), np.array([])
+W_anak_term_variance, W_fantasi_term_variance, W_tidik_term_variance = np.array([]), np.array([]), np.array([])
+W_anak_term_stdev, W_fantasi_term_stdev, W_tidik_term_stdev = np.array([]), np.array([]), np.array([])
+for i in range(W_anak.shape[1]):
+    W_anak_term_mean = np.append(W_anak_term_mean, np.mean(W_anak[:,i]))
+    W_anak_term_variance = np.append(W_anak_term_variance, np.var(W_anak[:,i]))
+    W_anak_term_stdev = np.append(W_anak_term_stdev, np.std(W_anak[:,i]))
+for i in range(W_fantasi.shape[1]):
+    W_fantasi_term_mean = np.append(W_fantasi_term_mean, np.mean(W_fantasi[:,i]))
+    W_fantasi_term_variance = np.append(W_fantasi_term_variance, np.var(W_fantasi[:,i]))
+    W_fantasi_term_stdev = np.append(W_fantasi_term_stdev, np.std(W_fantasi[:,i]))
+for i in range(W_tidik.shape[1]):
+    W_tidik_term_mean = np.append(W_tidik_term_mean, np.mean(W_tidik[:,i]))
+    W_tidik_term_variance = np.append(W_tidik_term_variance, np.var(W_tidik[:,i]))
+    W_tidik_term_stdev = np.append(W_tidik_term_stdev, np.std(W_tidik[:,i]))
+
 #pembobotan
 terms = terms_awal
-
-tf = np.zeros((terms.size, len(cerpens[0])+len(cerpens[1])+len(cerpens[2])))
+test_set = np.zeros((len(datas), terms.size))
+tf = np.zeros((terms.size, len(datas)))
 for i in range(len(datas)):
     for j in range(len(datas[i])):
-        for k in range(tf.shape[0]):
+        for k in range(terms.size):
+            if np.argwhere(datas[i] == terms[k]).size > 0:
+                test_set[i][k] == 1
             if terms[k] == datas[i][j]:
                 tf[k][i] += 1
 
@@ -139,10 +140,17 @@ for i in range(len(datas)):
     else:
         label_testing = np.append(label_testing, 2)
 
-gnb = GaussianNB()
-gnb.fit(W, label_training)
-pred = gnb.predict(W_testing)
-
+pred = np.array([])
+i = 0
+for test in test_set:
+    W_mean = [W_anak_term_mean, W_fantasi_term_mean, W_tidik_term_mean]
+    W_var = [W_anak_term_variance, W_fantasi_term_variance, W_tidik_term_variance]
+    W_stdev = [W_anak_term_stdev, W_fantasi_term_stdev, W_tidik_term_stdev]
+    P = naive_bayes(test, W_testing[i], W_mean, W_var, W_stdev)
+    pred = np.append(pred, np.argmax(P))
+    i += 1
+    
+    
 print('Selamat! Akurasi sistem anda 1.0 : %f' % metrics.accuracy_score(pred, label_testing))
 exec_time = time.time() - starttime
 seconds = exec_time % 60
