@@ -20,7 +20,7 @@ stemmer = factory.create_stemmer()
 kategori = ["Anak", "Fantasi", "Tidak Diketahui"]
 
 label_training = np.array([])
-for i in range(350):
+for i in range(525):
     if i < 175:
         label_training = np.append(label_training, 0)
     elif i >= 175 and i < 350:
@@ -31,7 +31,7 @@ gnb = GaussianNB()
 W = np.array(pd.read_excel('bobot awal.xlsx'))
 gnb.fit(W, label_training)
 gnb_pso = GaussianNB()
-W_PSO = np.array(pd.read_excel('bobot pso.xlsx'))
+W_PSO = np.array(pd.read_excel('bobot pso.xlsx')).T
 gnb_pso.fit(W_PSO, label_training)
 
 def tokenize(kalimat):
@@ -92,7 +92,7 @@ def pembobotan(datas):
     for i in range(W_testing.shape[0]):
         for j in range(W_testing.shape[1]):
             W_testing[i,j] = tf[j,i] * (IDF[j] + 1)
-    return datas
+    return W_testing
 
 @app.route('/')
 def index():
@@ -140,7 +140,7 @@ def NBhasil():
         kalimat.append(c)
     datas = read_data(kalimat)
     W_testing = pembobotan(datas)
-    kategori_cerpen = kategori[gnb.predict(W_testing)]
+    kategori_cerpen = kategori[int(gnb.predict(W_testing)[0])]
     proc_time = time.time() - start_time
     return render_template(
         'NB.html',
@@ -166,7 +166,7 @@ def NBPSO_hasil():
         kalimat.append(c)
     datas = read_data(kalimat)
     W_testing = pembobotan(datas)
-    kategori_cerpen = kategori[gnb_pso.predict(W_testing)]
+    kategori_cerpen = kategori[int(gnb_pso.predict(W_testing)[0])]
     proc_time = time.time() - start_time
     return render_template(
         'NB-PSO.html',
