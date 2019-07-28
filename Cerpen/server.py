@@ -61,7 +61,7 @@ terms_awal = np.array(terms_awal[0].split(' '))
 
 temp_g = open('terms-pso.txt', 'r')
 terms_awal_pso = []
-for f in temp_f:
+for f in temp_g:
     f = f.strip()
     terms_awal_pso.append(f)
 terms_awal_pso = np.array(terms_awal_pso[0].split(' '))
