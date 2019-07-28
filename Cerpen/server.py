@@ -32,6 +32,8 @@ W = np.array(pd.read_excel('bobot awal.xlsx'))
 gnb.fit(W, label_training)
 gnb_pso = GaussianNB()
 W_PSO = np.array(pd.read_excel('bobot pso.xlsx')).T
+print(W_PSO.shape)
+print(label_training.size)
 gnb_pso.fit(W_PSO, label_training)
 
 def tokenize(kalimat):
@@ -102,8 +104,12 @@ def index():
 
 @app.route('/NB')
 def NaiveBayes():
+    nama_cerpen = ""
+    kategori_cerpen = ""
     return render_template(
-        'NB.html'
+        'NB.html',
+        nama_cerpen = nama_cerpen,
+        kategori_cerpen = kategori_cerpen
     )
 
 @app.route('/NB-PSO')
@@ -148,7 +154,7 @@ def NBhasil():
         kategori_cerpen = kategori_cerpen
     )
 
-@app.route('/NB-PSO/NB-PSO-hasil')
+@app.route('/NB-PSO/NB-PSO-hasil', methods=['POST'])
 def NBPSO_hasil():
     start_time = time.time()
     target = os.path.join(APP_ROOT, 'uploads/')
@@ -175,4 +181,4 @@ def NBPSO_hasil():
     )
 
 if __name__ == '__main__':
-    app.run(port=1010, debug=True)
+    app.run(port=5000, debug=True)
