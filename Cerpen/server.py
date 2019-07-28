@@ -59,6 +59,13 @@ for f in temp_f:
     terms_awal.append(f)
 terms_awal = np.array(terms_awal[0].split(' '))
 
+temp_g = open('terms-pso.txt', 'r')
+terms_awal_pso = []
+for f in temp_f:
+    f = f.strip()
+    terms_awal_pso.append(f)
+terms_awal_pso = np.array(terms_awal_pso[0].split(' '))
+
 def read_data(kalimat):
     datas = []
     data = np.array([])
@@ -74,8 +81,10 @@ def read_data(kalimat):
     datas.append(data)
     return datas
 
-def pembobotan(datas):
+def pembobotan(datas, pso=False):
     terms = terms_awal
+    if pso == True:
+        terms = terms_awal_pso
     tf = np.zeros((terms.size, len(datas)))
     for i in range(len(datas)):
         for j in range(len(datas[i])):
@@ -171,7 +180,7 @@ def NBPSO_hasil():
         c = c.strip()
         kalimat.append(c)
     datas = read_data(kalimat)
-    W_testing = pembobotan(datas)
+    W_testing = pembobotan(datas, pso=True)
     kategori_cerpen = kategori[int(gnb_pso.predict(W_testing)[0])]
     proc_time = time.time() - start_time
     return render_template(

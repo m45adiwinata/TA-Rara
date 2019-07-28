@@ -16,6 +16,17 @@
     Author: BootstrapMade.com
     Author URL: https://bootstrapmade.com
   ======================================================= -->
+    <script>
+        document.getElementById("1").style.display = "none";
+        document.getElementById("2").style.display = "none";
+        document.getElementById("3").style.display = "none";
+        function setActive(id) {
+            document.getElementById("1").style.display = "none";
+            document.getElementById("2").style.display = "none";
+            document.getElementById("3").style.display = "none";
+            document.getElementById(id).style.display = "block";
+        }
+    </script>
 </head>
 
 <body>
@@ -55,14 +66,38 @@
       <div class="row">
         <div class="col-lg-12">
           <ul id="koleksi-flters">
-            <li data-filter=".filter-anak" onclick="setActive(this)">Anak</li>
-            <li data-filter=".filter-fantasi" onclick="setActive(this)">Fantasi</li>
-            <li data-filter=".filter-lain" onclick="setActive(this)">Lain-lain</li>
+            <li data-filter=".filter-anak" onclick="setActive(1)">Anak</li>
+            <li data-filter=".filter-fantasi" onclick="setActive(2)">Fantasi</li>
+            <li data-filter=".filter-lain" onclick="setActive(3)">Lain-lain</li>
           </ul>
         </div>
       </div>
 
-      <div class="list-group">
+      <div class="list-group" id="1">
+        <button type="button" class="list-group-item"><a href="View.html">Cras justo odio</a></button>
+        <button type="button" class="list-group-item">Dapibus ac facilisis in</button>
+        <button type="button" class="list-group-item">Morbi leo risus</button>
+        <button type="button" class="list-group-item">Porta ac consectetur ac</button>
+        <button type="button" class="list-group-item">Vestibulum at eros</button>
+        <button type="button" class="list-group-item">Cras justo odio</button>
+        <button type="button" class="list-group-item">Dapibus ac facilisis in</button>
+        <button type="button" class="list-group-item">Morbi leo risus</button>
+        <button type="button" class="list-group-item">Porta ac consectetur ac</button>
+        <button type="button" class="list-group-item">Vestibulum at eros</button>
+      </div>
+      <div class="list-group" id="2">
+        <button type="button" class="list-group-item"><a href="View.html">Cras justo odio</a></button>
+        <button type="button" class="list-group-item">Dapibus ac facilisis in</button>
+        <button type="button" class="list-group-item">Morbi leo risus</button>
+        <button type="button" class="list-group-item">Porta ac consectetur ac</button>
+        <button type="button" class="list-group-item">Vestibulum at eros</button>
+        <button type="button" class="list-group-item">Cras justo odio</button>
+        <button type="button" class="list-group-item">Dapibus ac facilisis in</button>
+        <button type="button" class="list-group-item">Morbi leo risus</button>
+        <button type="button" class="list-group-item">Porta ac consectetur ac</button>
+        <button type="button" class="list-group-item">Vestibulum at eros</button>
+      </div>
+      <div class="list-group" id="3">
         <button type="button" class="list-group-item"><a href="View.html">Cras justo odio</a></button>
         <button type="button" class="list-group-item">Dapibus ac facilisis in</button>
         <button type="button" class="list-group-item">Morbi leo risus</button>
