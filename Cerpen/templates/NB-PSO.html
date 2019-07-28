@@ -51,38 +51,31 @@
         <div class="jumbotron">
           <p class="big text-center"><br><br>" Tentukan Kategori Cerpenmu Di Sini "</p>
           <div class="subcription-info text-center">
-            <form>
-    
+            <form method="POST" action="{{url_for('NBPSO_hasil')}}" enctype="multipart/form-data">
               <div class="row">
                 <div class="col-sm-7 col-md-6 col-lg-5">
-          
                   <div class="form-group">
                     <label for="file" class="sr-only">File</label>
                     <div class="input-group">
-                      <input type="text" name="filename" class="form-control" style="width:350px" placeholder="Pilih cerpenmu ..." readonly>
+                      <input type="text" name="filename" class="form-control" style="width:350px" placeholder="Pilih cerpenmu ..." readonly value="{{nama_cerpen}}">
                       <span class="input-group-btn">
                         <div class="btn btn-default  custom-file-uploader">
-                          <input type="file" name="file" onchange="this.form.filename.value = this.files.length ? this.files[0].name : ''" />
+                          <input type="file" name="file" onchange="this.form.filename.value = this.files.length ? this.files[0].name : ''" enctype="multipart/form-data" />
                           Select a file
                         </div>
                       </span>
                     </div>
                   </div>
-          
                 </div>
               </div>
-            
+              <div class="btn-group">
+                <input type="submit" value="Proses" class="btn btn-default">
+              </div>
             </form>
-
-            <div class="btn-group">
-              <button type="button" class="btn btn-default">Proses</button>
-            </div>
-
             <div class="input-group" style="margin: 20px; margin-left: 120px">
-              <input type="text" name="classfile" class="form-control  text-center" style="width:200px" placeholder="Kategori Cerpenmu ..." readonly>
+              <input type="text" name="classfile" class="form-control  text-center" style="width:200px" placeholder="Kategori Cerpenmu ..." value="{{kategori_cerpen}}"readonly>
            </div> 
           </div>
-
         </div>
       </div>
     </div>
