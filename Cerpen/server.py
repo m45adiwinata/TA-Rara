@@ -32,9 +32,12 @@ W = np.array(pd.read_excel('bobot awal.xlsx'))
 gnb.fit(W, label_training)
 gnb_pso = GaussianNB()
 W_PSO = np.array(pd.read_excel('bobot pso.xlsx')).T
-print(W_PSO.shape)
-print(label_training.size)
 gnb_pso.fit(W_PSO, label_training)
+
+cerpen_path = ["koleksi-cerpen/Anak/", "koleksi-cerpen/Fantasi/", "koleksi-cerpen/Tidak Diketahui/"]
+koleksi = np.array([])
+for path in cerpen_path:
+    koleksi = np.append(koleksi, [os.path.join(path,fname) for fname in os.listdir(path) if fname.endswith('.txt')])
 
 def tokenize(kalimat):
     words = kalimat.split(' ')
@@ -61,7 +64,7 @@ terms_awal = np.array(terms_awal[0].split(' '))
 
 temp_g = open('terms-pso.txt', 'r')
 terms_awal_pso = []
-for f in temp_f:
+for f in temp_g:
     f = f.strip()
     terms_awal_pso.append(f)
 terms_awal_pso = np.array(terms_awal_pso[0].split(' '))
@@ -134,7 +137,8 @@ def NaiveBayesPSO():
 @app.route('/koleksi')
 def koleksi():
     return render_template(
-        'Koleksi.html'
+        'Koleksi.html',
+        koleksi = koleksi
     )
 
 @app.route('/NB/NB-hasil', methods=['POST'])
