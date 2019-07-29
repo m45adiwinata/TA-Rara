@@ -17,19 +17,38 @@
     Author URL: https://bootstrapmade.com
   ======================================================= -->
     <script>
-        document.getElementById("1").style.display = "none";
-        document.getElementById("2").style.display = "none";
-        document.getElementById("3").style.display = "none";
         function setActive(id) {
             document.getElementById("1").style.display = "none";
             document.getElementById("2").style.display = "none";
             document.getElementById("3").style.display = "none";
             document.getElementById(id).style.display = "block";
+            
+            document.getElementById("btn_anak").style.background = "#F8F8F8";
+            document.getElementById("btn_fan").style.background = "#F8F8F8";
+            document.getElementById("btn_ll").style.background = "#F8F8F8";
+            if(id == "1") {
+                document.getElementById("btn_anak").style.background = "#F01010";
+            }
+            else if(id == "2") {
+                document.getElementById("btn_fan").style.background = "#F01010";
+            }
+            else {
+                document.getElementById("btn_ll").style.background = "#F01010";
+            }
         }
     </script>
 </head>
 
 <body>
+    <script>
+        document.getElementById("1").style.display = "block";
+        document.getElementById("2").style.display = "none";
+        document.getElementById("3").style.display = "none";
+        
+        document.getElementById("btn_anak").style.background = "#F01010";
+        document.getElementById("btn_fan").style.background = "#F8F8F8";
+        document.getElementById("btn_ll").style.background = "#F8F8F8";
+    </script>
   <!--HEADER START-->
   <div class="main-navigation navbar-fixed-top">
     <nav class="navbar navbar-default">
@@ -66,48 +85,27 @@
       <div class="row">
         <div class="col-lg-12">
           <ul id="koleksi-flters">
-            <li data-filter=".filter-anak" onclick="setActive(1)">Anak</li>
-            <li data-filter=".filter-fantasi" onclick="setActive(2)">Fantasi</li>
-            <li data-filter=".filter-lain" onclick="setActive(3)">Lain-lain</li>
+            <li data-filter=".filter-anak" onclick="setActive(1)" id="btn_anak">Anak</li>
+            <li data-filter=".filter-fantasi" onclick="setActive(2)" id="btn_fan">Fantasi</li>
+            <li data-filter=".filter-lain" onclick="setActive(3)" id="btn_ll">Lain-lain</li>
           </ul>
         </div>
       </div>
 
       <div class="list-group" id="1">
-        <button type="button" class="list-group-item"><a href="View.html">Cras justo odio</a></button>
-        <button type="button" class="list-group-item">Dapibus ac facilisis in</button>
-        <button type="button" class="list-group-item">Morbi leo risus</button>
-        <button type="button" class="list-group-item">Porta ac consectetur ac</button>
-        <button type="button" class="list-group-item">Vestibulum at eros</button>
-        <button type="button" class="list-group-item">Cras justo odio</button>
-        <button type="button" class="list-group-item">Dapibus ac facilisis in</button>
-        <button type="button" class="list-group-item">Morbi leo risus</button>
-        <button type="button" class="list-group-item">Porta ac consectetur ac</button>
-        <button type="button" class="list-group-item">Vestibulum at eros</button>
+          {% for i in range(len1) %}
+            <button type="button" class="list-group-item"><a href="View.html">{{ koleksi[0][i] }}</a></button> 
+          {% endfor %}
       </div>
       <div class="list-group" id="2">
-        <button type="button" class="list-group-item"><a href="View.html">Cras justo odio</a></button>
-        <button type="button" class="list-group-item">Dapibus ac facilisis in</button>
-        <button type="button" class="list-group-item">Morbi leo risus</button>
-        <button type="button" class="list-group-item">Porta ac consectetur ac</button>
-        <button type="button" class="list-group-item">Vestibulum at eros</button>
-        <button type="button" class="list-group-item">Cras justo odio</button>
-        <button type="button" class="list-group-item">Dapibus ac facilisis in</button>
-        <button type="button" class="list-group-item">Morbi leo risus</button>
-        <button type="button" class="list-group-item">Porta ac consectetur ac</button>
-        <button type="button" class="list-group-item">Vestibulum at eros</button>
+          {% for i in range(len2) %}
+            <button type="button" class="list-group-item"><a href="View.html">{{ koleksi[1][i] }}</a></button> 
+          {% endfor %}
       </div>
       <div class="list-group" id="3">
-        <button type="button" class="list-group-item"><a href="View.html">Cras justo odio</a></button>
-        <button type="button" class="list-group-item">Dapibus ac facilisis in</button>
-        <button type="button" class="list-group-item">Morbi leo risus</button>
-        <button type="button" class="list-group-item">Porta ac consectetur ac</button>
-        <button type="button" class="list-group-item">Vestibulum at eros</button>
-        <button type="button" class="list-group-item">Cras justo odio</button>
-        <button type="button" class="list-group-item">Dapibus ac facilisis in</button>
-        <button type="button" class="list-group-item">Morbi leo risus</button>
-        <button type="button" class="list-group-item">Porta ac consectetur ac</button>
-        <button type="button" class="list-group-item">Vestibulum at eros</button>
+          {% for i in range(len3) %}
+            <button type="button" class="list-group-item"><a href="View.html">{{ koleksi[2][i] }}</a></button> 
+          {% endfor %}
       </div>
 
       <nav aria-label="..." class="text-center">
@@ -122,13 +120,6 @@
     </div>
   </div>
   <!-- KOLEKSI END -->
-
-  <script>
-    function setActive(el){
-      $('li').removeClass('filter-active');
-      $(el).addClass('filter-active');
-    }
-  </script>
 
   <script src="{{url_for('static', filename='js/jquery.min.js')}}"></script>
   <script src="{{url_for('static', filename='js/jquery.easing.min.js')}}"></script>
