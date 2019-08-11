@@ -115,20 +115,24 @@ def index():
 def NaiveBayes():
     nama_cerpen = ""
     kategori_cerpen = ""
+    proc_time = ""
     return render_template(
         'NB.html',
         nama_cerpen = nama_cerpen,
-        kategori_cerpen = kategori_cerpen
+        kategori_cerpen = kategori_cerpen,
+        proc_time = proc_time
     )
 
 @app.route('/NB-PSO')
 def NaiveBayesPSO():
     nama_cerpen = ""
     kategori_cerpen = ""
+    proc_time = ""
     return render_template(
         'NB-PSO.html',
         nama_cerpen = nama_cerpen,
-        kategori_cerpen = kategori_cerpen
+        kategori_cerpen = kategori_cerpen,
+        proc_time = proc_time
     )
 
 @app.route('/koleksi')
@@ -157,10 +161,12 @@ def NBhasil():
     W_testing = pembobotan(datas)
     kategori_cerpen = kategori[int(gnb.predict(W_testing)[0])]
     proc_time = time.time() - start_time
+    proc_time = str(proc_time) + ' seconds.'
     return render_template(
         'NB.html',
         nama_cerpen = filename,
-        kategori_cerpen = kategori_cerpen
+        kategori_cerpen = kategori_cerpen,
+        proc_time = proc_time
     )
 
 @app.route('/NB-PSO/NB-PSO-hasil', methods=['POST'])
@@ -183,10 +189,12 @@ def NBPSO_hasil():
     W_testing = pembobotan(datas, pso=True)
     kategori_cerpen = kategori[int(gnb_pso.predict(W_testing)[0])]
     proc_time = time.time() - start_time
+    proc_time = str(proc_time) + ' seconds.'
     return render_template(
         'NB-PSO.html',
         nama_cerpen = filename,
-        kategori_cerpen = kategori_cerpen
+        kategori_cerpen = kategori_cerpen,
+        proc_time = proc_time
     )
 
 if __name__ == '__main__':
