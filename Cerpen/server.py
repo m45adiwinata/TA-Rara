@@ -17,7 +17,7 @@ factory = StopWordRemoverFactory()
 stopword = factory.create_stop_word_remover()
 factory = StemmerFactory()
 stemmer = factory.create_stemmer()
-kategori = ["Anak", "Fantasi", "Tidak Diketahui"]
+kategori = ["Anak", "Fantasi", "Selain Anak & Fantasi"]
 
 label_training = np.array([])
 for i in range(525):
@@ -31,7 +31,7 @@ gnb = GaussianNB()
 W = np.array(pd.read_excel('bobot awal.xlsx'))
 gnb.fit(W, label_training)
 gnb_pso = GaussianNB()
-W_PSO = np.array(pd.read_excel('bobot pso.xlsx')).T
+W_PSO = np.array(pd.read_excel('bobot pso1.xlsx')).T
 gnb_pso.fit(W_PSO, label_training)
 
 def tokenize(kalimat):
@@ -57,7 +57,7 @@ for f in temp_f:
     terms_awal.append(f)
 terms_awal = np.array(terms_awal[0].split(' '))
 
-temp_g = open('terms-pso.txt', 'r')
+temp_g = open('terms-pso1.txt', 'r')
 terms_awal_pso = []
 for f in temp_g:
     f = f.strip()
