@@ -1,4 +1,4 @@
-from flask import Flask, Response, request, abort, send_from_directory, render_template
+from flask import Flask, Response, request, abort, send_from_directory, render_template, send_file
 import pandas as pd
 import numpy as np
 import random
@@ -142,13 +142,28 @@ def koleksi():
     len1 = koleksi[0].size
     len2 = koleksi[1].size
     len3 = koleksi[2].size
+    nama_koleksi = koleksi
+    for i in range(len1):
+        nama_koleksi[0][i] = nama_koleksi[0][i].split("/")[-1].split(".")[0]
+    for i in range(len2):
+        nama_koleksi[1][i] = nama_koleksi[1][i].split("/")[-1].split(".")[0]
+    for i in range(len3):
+        nama_koleksi[2][i] = nama_koleksi[2][i].split("/")[-1].split(".")[0]
     return render_template(
         'Koleksi.html',
-        koleksi = koleksi,
+        koleksi = nama_koleksi,
+        paths = koleksi,
         len1 = len1,
         len2 = len2,
         len3 = len3
     )
+    
+@app.route('/return-files/<path>')
+def return_files(path):
+	try:
+		return send_file(path+'.txt', attachment_filename= path.split("/")[-1]+'.txt')
+	except Exception as e:
+		return str(e)
 
 @app.route('/NB/NB-hasil', methods=['POST'])
 def NBhasil():

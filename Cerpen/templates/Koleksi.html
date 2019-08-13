@@ -94,7 +94,7 @@
 
       <div class="list-group" id="1">
           {% for i in range(len1) %}
-            <button type="button" class="list-group-item"><a href="View.html">{{ koleksi[0][i] }}</a></button> 
+            <button type="button" class="list-group-item"><a href="{{ url_for('return_files', path=paths[0][i]) }}">{{ koleksi[0][i] }}</a></button> 
           {% endfor %}
       </div>
       <div class="list-group" id="2">
