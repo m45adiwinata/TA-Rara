@@ -142,32 +142,34 @@ def koleksi():
     len1 = koleksi[0].size
     len2 = koleksi[1].size
     len3 = koleksi[2].size
-    nama_koleksi = koleksi
+    nama_koleksi = [np.array([]), np.array([]), np.array([])]
     for i in range(len1):
-        nama_koleksi[0][i] = nama_koleksi[0][i].split("/")[-1].split(".")[0]
+        nama_koleksi[0] = np.append(nama_koleksi[0], koleksi[0][i].split("/")[-1].split(".")[0])
     for i in range(len2):
-        nama_koleksi[1][i] = nama_koleksi[1][i].split("/")[-1].split(".")[0]
+        nama_koleksi[1] = np.append(nama_koleksi[1], koleksi[1][i].split("/")[-1].split(".")[0])
     for i in range(len3):
-        nama_koleksi[2][i] = nama_koleksi[2][i].split("/")[-1].split(".")[0]
+        nama_koleksi[2] = np.append(nama_koleksi[2], koleksi[2][i].split("/")[-1].split(".")[0])
+    print(koleksi)
     return render_template(
         'Koleksi.html',
-        koleksi = nama_koleksi,
-        paths = koleksi,
+        nama_koleksi = nama_koleksi,
+        koleksi = koleksi,
         len1 = len1,
         len2 = len2,
         len3 = len3
     )
     
-@app.route('/return-files/<path>')
+@app.route('/return-files/<path:path>')
 def return_files(path):
 	try:
-		return send_file(path+'.txt', attachment_filename= path.split("/")[-1]+'.txt')
+		return send_from_directory(("/").join(path.split("/")[:-1]), path.split("/")[-1], as_attachment=True)
 	except Exception as e:
 		return str(e)
 
 @app.route('/NB/NB-hasil', methods=['POST'])
 def NBhasil():
     start_time = time.time()
+    cerpen_path = ["koleksi-cerpen/Anak/", "koleksi-cerpen/Fantasi/", "koleksi-cerpen/Tidak Diketahui/"]
     target = os.path.join(APP_ROOT, 'uploads/')
     if not os.path.isdir(target):
         os.mkdir(target)
@@ -183,7 +185,11 @@ def NBhasil():
         kalimat.append(c)
     datas = read_data(kalimat)
     W_testing = pembobotan(datas)
-    kategori_cerpen = kategori[int(gnb.predict(W_testing)[0])]
+    result = int(gnb.predict(W_testing)[0])
+    kategori_cerpen = kategori[result]
+    class_dir = os.path.join(APP_ROOT, cerpen_path[result])
+    class_dest = '/'.join([class_dir, filename])
+    file.save(class_dest)
     proc_time = time.time() - start_time
     proc_time = str(proc_time) + ' seconds.'
     return render_template(
@@ -196,6 +202,7 @@ def NBhasil():
 @app.route('/NB-PSO/NB-PSO-hasil', methods=['POST'])
 def NBPSO_hasil():
     start_time = time.time()
+    cerpen_path = ["koleksi-cerpen/Anak/", "koleksi-cerpen/Fantasi/", "koleksi-cerpen/Tidak Diketahui/"]
     target = os.path.join(APP_ROOT, 'uploads/')
     if not os.path.isdir(target):
         os.mkdir(target)
@@ -211,7 +218,11 @@ def NBPSO_hasil():
         kalimat.append(c)
     datas = read_data(kalimat)
     W_testing = pembobotan(datas, pso=True)
-    kategori_cerpen = kategori[int(gnb_pso.predict(W_testing)[0])]
+    result = int(gnb_pso.predict(W_testing)[0])
+    kategori_cerpen = kategori[result]
+    class_dir = os.path.join(APP_ROOT, cerpen_path[result])
+    class_dest = '/'.join([class_dir, filename])
+    file.save(class_dest)
     proc_time = time.time() - start_time
     proc_time = str(proc_time) + ' seconds.'
     return render_template(

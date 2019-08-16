@@ -85,7 +85,7 @@
       <div class="row">
         <div class="col-lg-12">
           <ul id="koleksi-flters">
-            <li data-filter=".filter-anak" onclick="setActive(1)" id="btn_anak">Anak</li>
+            <li data-filter=".filter-anak" onclick="setActive(1)" id="btn_anak" bgcolor="#F01010">Anak</li>
             <li data-filter=".filter-fantasi" onclick="setActive(2)" id="btn_fan">Fantasi</li>
             <li data-filter=".filter-lain" onclick="setActive(3)" id="btn_ll">Lain-lain</li>
           </ul>
@@ -94,17 +94,17 @@
 
       <div class="list-group" id="1">
           {% for i in range(len1) %}
-            <button type="button" class="list-group-item"><a href="{{ url_for('return_files', path=paths[0][i]) }}">{{ koleksi[0][i] }}</a></button> 
+            <button type="button" class="list-group-item"><a href="{{ url_for('return_files', path=koleksi[0][i]) }}">{{ nama_koleksi[0][i] }}</a></button> 
           {% endfor %}
       </div>
       <div class="list-group" id="2">
           {% for i in range(len2) %}
-            <button type="button" class="list-group-item"><a href="View.html">{{ koleksi[1][i] }}</a></button> 
+            <button type="button" class="list-group-item"><a href="{{ url_for('return_files', path=koleksi[1][i]) }}">{{ nama_koleksi[1][i] }}</a></button> 
           {% endfor %}
       </div>
       <div class="list-group" id="3">
           {% for i in range(len3) %}
-            <button type="button" class="list-group-item"><a href="View.html">{{ koleksi[2][i] }}</a></button> 
+            <button type="button" class="list-group-item"><a href="{{ url_for('return_files', path=koleksi[2][i]) }}">{{ nama_koleksi[2][i] }}</a></button> 
           {% endfor %}
       </div>
 
