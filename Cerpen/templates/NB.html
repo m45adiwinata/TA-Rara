@@ -63,7 +63,7 @@
                       <input type="text" name="filename" class="form-control" style="width:350px" placeholder="Pilih cerpenmu ..." readonly value="{{nama_cerpen}}">
                       <span class="input-group-btn">
                         <div class="btn btn-default  custom-file-uploader">
-                          <input type="file" name="file" onchange="this.form.filename.value = this.files.length ? this.files[0].name : ''" enctype="multipart/form-data" />
+                          <input type="file" name="file" onchange="this.form.filename.value = this.files.length ? this.files[0].name : ''" enctype="multipart/form-data" accept=".txt" />
                           Select a file
                         </div>
                       </span>
